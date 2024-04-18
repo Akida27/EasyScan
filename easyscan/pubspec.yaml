@@ -10,6 +10,7 @@ environment:
   sdk: '>=3.3.3 <4.0.0'
 
 dependencies:
+  firebase_core: ^2.30.0
   flutter:
     sdk: flutter
   flutter_localizations:

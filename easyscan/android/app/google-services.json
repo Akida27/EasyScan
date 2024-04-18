@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "468085241140",
+    "project_id": "easyscan-e9dd0",
+    "storage_bucket": "easyscan-e9dd0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468085241140:android:490c7111012a2d60c12161",
+        "android_client_info": {
+          "package_name": "com.example.easyscan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP18T3HmwLYb21Ac2ozREfPX8Gz4S8axo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

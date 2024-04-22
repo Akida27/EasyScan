@@ -1,9 +1,9 @@
 import 'package:easyscan/src/views/Login_view.dart';
+import 'package:easyscan/src/views/sample_item.dart';
 import 'package:flutter/material.dart';
 
 import '../settings/settings_view.dart';
-import 'sample_item.dart';
-import 'sample_item_details_view.dart';
+//import 'login_view.dart';
 
 /// Displays a list of SampleItems.
 class SampleItemListView extends StatelessWidget {

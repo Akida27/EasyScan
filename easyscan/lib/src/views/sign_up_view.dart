@@ -1,8 +1,9 @@
+import 'package:easyscan/src/views/customer_view.dart';
 import 'package:easyscan/src/views/login_view.dart';
 import 'package:flutter/material.dart';
 
 class SignupView extends StatelessWidget {
-  const SignupView({Key? key}) : super(key: key);
+  const SignupView({super.key});
 
   static const routeName = '/signup_view';
 
@@ -58,7 +59,12 @@ class SignupView extends StatelessWidget {
                   backgroundColor: const Color(0xffEEB53A), // background
                   foregroundColor: const Color(0xff39328F), // foreground
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.restorablePushNamed(
+                    context,
+                    CustomersView.routeName,
+                  );
+                },
                 child: const Text(
                   'Sign up',
                   style: TextStyle(

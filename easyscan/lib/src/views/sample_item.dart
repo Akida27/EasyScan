@@ -4,3 +4,10 @@ class SampleItem {
 
   final int id;
 }
+
+class Customer {
+  const Customer(this.id, this.name, this.phone);
+  final int id;
+  final String name;
+  final String phone;
+}

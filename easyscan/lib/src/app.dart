@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'views/sample_item_details_view.dart';
+import 'views/customer_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
-import 'views/sample_item_list_view.dart';
 import 'views/login_view.dart';
 import 'views/sign_up_view.dart';
 
@@ -70,17 +69,14 @@ class MyApp extends StatelessWidget {
               settings: routeSettings,
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
-                  case LoginView.routeName: 
-                    return const LoginView();
                   case SignupView.routeName: 
                     return const SignupView();
+                  case CustomersView.routeName: 
+                    return const CustomersView();
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
-                  case SampleItemListView.routeName:
                   default:
-                    return const SampleItemListView();
+                    return const LoginView();
                 }
               },
             );

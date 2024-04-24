@@ -1,10 +1,12 @@
 import 'package:easyscan/src/views/sign_up_view.dart';
 import 'package:flutter/material.dart';
 
+import 'customer_view.dart';
+
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
 
-  static const routeName = '/login_view';
+  static const routeName = '/';
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +54,14 @@ class LoginView extends StatelessWidget {
                   backgroundColor: const Color(0xffEEB53A), // background
                   foregroundColor: const Color(0xff39328F), // foreground
                 ),
-                onPressed: () { },
+                onPressed: () {
+                  Navigator.restorablePushNamed(
+                    context,
+                    CustomersView.routeName,
+                  );
+                },
                 child: const Text(
-                  'Sign in',
+                  'Log in',
                   style: TextStyle(
                     fontSize: 24,
                   ),

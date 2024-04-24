@@ -11,91 +11,91 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        //automaticallyImplyLeading: false,
-        title: const Text('Login'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/Meza_Nuts.png',
-              width: 200,
-              height: 200,
+        appBar: AppBar(
+            //automaticallyImplyLeading: false,
+            /* title: const Text('Login'),
+          centerTitle: true, */
             ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Email',
-                ),
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/Meza_Nuts.png',
+                width: 200,
+                height: 200,
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  fixedSize: const Size(325, 53),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  backgroundColor: const Color(0xffEEB53A), // background
-                  foregroundColor: const Color(0xff39328F), // foreground
-                ),
-                onPressed: () {
-                  Navigator.restorablePushNamed(
-                    context,
-                    CustomersView.routeName,
-                  );
-                },
-                child: const Text(
-                  'Log in',
-                  style: TextStyle(
-                    fontSize: 24,
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Email',
                   ),
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const Text(
-                  'Don\'t have an account?',
-                  style: TextStyle(fontSize: 15.0),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Password',
+                  ),
                 ),
-                TextButton(
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    fixedSize: const Size(325, 53),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    backgroundColor: const Color(0xffEEB53A), // background
+                    foregroundColor: const Color(0xff39328F), // foreground
+                  ),
                   onPressed: () {
-                  Navigator.restorablePushNamed(
-                    context,
-                    SignupView.routeName,
-                );
+                    Navigator.restorablePushNamed(
+                      context,
+                      CustomersView.routeName,
+                    );
                   },
                   child: const Text(
-                    'Sign up',
+                    'Log in',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0,
-                      color: Color(0xff39328F),
+                      fontSize: 24,
                     ),
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
-      )
-    );
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const Text(
+                    'Don\'t have an account?',
+                    style: TextStyle(fontSize: 15.0),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.restorablePushNamed(
+                        context,
+                        SignupView.routeName,
+                      );
+                    },
+                    child: const Text(
+                      'Sign up',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Color(0xff39328F),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
   }
 }

@@ -26,7 +26,7 @@ class _CustomersViewwState extends State<CustomersView> {
     const Customer(8, "Ahmed", "+46923213213"),
     const Customer(9, "Fatima", "+46923213213"),
   ];
-  
+
   // List<Customer> filteredCustomers = [];
 
   @override
@@ -44,7 +44,7 @@ class _CustomersViewwState extends State<CustomersView> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               showSearch(
                 context: context,
@@ -84,25 +84,14 @@ class _CustomersViewwState extends State<CustomersView> {
   }
 }
 
-class SearchBarDelegate extends  SearchDelegate<String> {
+class SearchBarDelegate extends SearchDelegate<String> {
   final List<Customer> customers;
   SearchBarDelegate(this.customers);
-  // final List<Customer> customers = [
-  //   const Customer(1, "Jossef", "+46923213213"),
-  //   const Customer(2, "Adam", "+46923413213"),
-  //   const Customer(3, "Yones", "+46923213213"),
-  //   const Customer(4, "Sandra", "+46923213213"),
-  //   const Customer(5, "Aron", "+46923213213"),
-  //   const Customer(6, "Anton", "+46923213213"),
-  //   const Customer(7, "Amina", "+46923213213"),
-  //   const Customer(8, "Ahmed", "+46923213213"),
-  //   const Customer(9, "Fatima", "+46923213213"),
-  // ];
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -113,18 +102,18 @@ class SearchBarDelegate extends  SearchDelegate<String> {
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () {
-          close(context, ""); 
-        },
-      );
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, "");
+      },
+    );
   }
 
   @override
   Widget buildResults(BuildContext context) {
     List<Customer> matchesQuery = [];
-    for (var customer in customers ) {
-      if (customer.name.toLowerCase().contains(query.toLowerCase())) {
+    for (var customer in customers) {
+      if (customer.name.toLowerCase().startsWith(query.toLowerCase())) {
         matchesQuery.add(customer);
       }
     }
@@ -148,7 +137,8 @@ class SearchBarDelegate extends  SearchDelegate<String> {
           onTap: () {
             Navigator.restorablePushNamed(
               context,
-              LoginView.routeName,  // change to order screen ********************************
+              LoginView
+                  .routeName, // change to order screen ********************************
             );
           },
         );
@@ -159,8 +149,8 @@ class SearchBarDelegate extends  SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<Customer> matchesQuery = [];
-    for (var customer in customers ) {
-      if (customer.name.toLowerCase().contains(query.toLowerCase())) {
+    for (var customer in customers) {
+      if (customer.name.toLowerCase().startsWith(query.toLowerCase())) {
         matchesQuery.add(customer);
       }
     }
@@ -184,13 +174,12 @@ class SearchBarDelegate extends  SearchDelegate<String> {
           onTap: () {
             Navigator.restorablePushNamed(
               context,
-              LoginView.routeName, // change to order screen ********************************
+              LoginView
+                  .routeName, // change to order screen ********************************
             );
           },
         );
       },
     );
   }
-  
-
 }

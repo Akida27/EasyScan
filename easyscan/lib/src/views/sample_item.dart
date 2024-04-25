@@ -10,4 +10,14 @@ class Customer {
   final int id;
   final String name;
   final String phone;
+  
+}
+
+class Product {
+  const Product(this.id, this.name, this.productNumber, this.quantity);
+  final int id;
+  final String name;
+  final int productNumber;
+  final String quantity;
+
 }

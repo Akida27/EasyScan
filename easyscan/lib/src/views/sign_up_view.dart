@@ -88,7 +88,7 @@ class SignupView extends StatelessWidget {
                     );
                   },
                   child: const Text(
-                    'Sign in',
+                    'Log in',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,

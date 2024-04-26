@@ -17,7 +17,7 @@ class OrdersView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders for ${customer.name}'),
+        title: Text('Orders för ${customer.name}'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -33,7 +33,7 @@ class OrdersView extends StatelessWidget {
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
               child: ListView.builder(
                 itemCount: orders.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -51,7 +51,7 @@ class OrdersView extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 40),
+            padding: const EdgeInsets.only(bottom: 16, top: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -86,7 +86,7 @@ class OrdersView extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.qr_code_scanner,
-                        color: Color(0xff8E8A91),
+                        color: Color.fromARGB(255, 216, 212, 212),
                       ),
                       SizedBox(width: 10),
                       Text(

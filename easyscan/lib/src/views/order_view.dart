@@ -1,46 +1,30 @@
 import 'package:flutter/material.dart';
-import 'addProduct.dart';
+import 'add_product_view.dart';
 import 'sample_item.dart';
 
 class OrdersView extends StatelessWidget {
   const OrdersView({
-    Key? key,
-    this.items = const [
-      Product(1, "Name1", 14323, "10x5kg"),
-      Product(2, "Name2", 14323, "10x20kg"),
-      Product(3, "Name3", 14323, "15x5kg"),
-      Product(4, "Name4", 14323, "10x5kg"),
-      Product(5, "Name5", 14323, "10x5kg"),
-      Product(6, "Name6", 14323, "10x5kg"),
-      Product(7, "Name7", 14323, "10x5kg"),
-      Product(8, "Name8", 14323, "10x5kg"),
-      Product(9, "Name9", 14323, "10x5kg"),
-      Product(10, "Name10", 14323, "10x5kg"),
-      Product(11, "Name11", 14323, "10x5kg"),
-      Product(12, "Name12", 14323, "10x5kg"),
-    ],
+    super.key,
   });
 
   static const routeName = '/orders_view';
 
-  final List<Product> items;
-
   @override
   Widget build(BuildContext context) {
+    final Customer customer =
+        ModalRoute.of(context)?.settings.arguments as Customer;
+    final orders = customer.orders;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Orders for Fatima"),
+        title: Text('Orders for ${customer.name}'),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               // Handle onPressed to navigate to the add product screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddProductScreen(),
-                ),
-              );
+              Navigator.pushNamed(context, AddProductScreen.routeName,
+                  arguments: customer);
             },
           ),
         ],
@@ -51,15 +35,15 @@ class OrdersView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: ListView.builder(
-                itemCount: items.length,
+                itemCount: orders.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final item = items[index];
+                  final order = orders[index];
 
                   return ListTile(
-                    title: Text("${item.name} - ${item.quantity}"),
+                    title: Text("${order.name} - ${order.quantity}"),
                     subtitle: Text(
-                      "Artikelnummer: ${item.productNumber}",
-                      style: TextStyle(color: Color(0xff8E8A91)),
+                      "Artikelnummer: ${order.productNumber}",
+                      style: const TextStyle(color: Color(0xff8E8A91)),
                     ),
                   );
                 },

@@ -1,8 +1,8 @@
+import 'package:easyscan/src/constants/customer.dart';
 import 'package:flutter/material.dart';
 //import 'package:easy_search_bar/easy_search_bar.dart';
 
 import '../settings/settings_view.dart';
-import 'Login_view.dart';
 import 'order_view.dart';
 import 'sample_item.dart';
 
@@ -15,18 +15,6 @@ class CustomersView extends StatefulWidget {
 }
 
 class _CustomersViewwState extends State<CustomersView> {
-  final List<Customer> customers = const [
-    Customer(1, "Jossef", "+46923213213"),
-    Customer(2, "Adam", "+46923413213"),
-    Customer(3, "Yones", "+46923213213"),
-    Customer(4, "Sandra", "+46923213213"),
-    Customer(5, "Aron", "+46923213213"),
-    Customer(6, "Anton", "+46923213213"),
-    Customer(7, "Amina", "+46923213213"),
-    Customer(8, "Ahmed", "+46923213213"),
-    Customer(9, "Fatima", "+46923213213"),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +47,7 @@ class _CustomersViewwState extends State<CustomersView> {
 
           return ListTile(
             title: Text(customer.name),
-            subtitle: Text(customer.phone),
+            subtitle: Text(customer.phoneNumber),
             leading: CircleAvatar(
               child: Text(
                 customer.name[0],
@@ -70,9 +58,11 @@ class _CustomersViewwState extends State<CustomersView> {
               ),
             ),
             onTap: () {
-              Navigator.restorablePushNamed(
+              Navigator.pushNamed(
                 context,
                 OrdersView.routeName,
+                arguments:
+                    customer, // Pass the selected customer as an argument
               );
             },
           );
@@ -122,7 +112,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
 
         return ListTile(
           title: Text(customer.name),
-          subtitle: Text(customer.phone),
+          subtitle: Text(customer.phoneNumber),
           leading: CircleAvatar(
             child: Text(
               customer.name[0],
@@ -132,12 +122,6 @@ class SearchBarDelegate extends SearchDelegate<String> {
               ),
             ),
           ),
-          // onTap: () {
-          //   Navigator.restorablePushNamed(
-          //     context,
-          //     OdersView.routeName,
-          //   );
-          // },
           onTap: () {
             Navigator.pushNamed(
               context,
@@ -165,7 +149,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
 
         return ListTile(
           title: Text(customer.name),
-          subtitle: Text(customer.phone),
+          subtitle: Text(customer.phoneNumber),
           leading: CircleAvatar(
             child: Text(
               customer.name[0],

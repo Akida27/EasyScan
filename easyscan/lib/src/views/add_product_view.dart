@@ -121,7 +121,6 @@ class AddProductScreen extends StatelessWidget {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
                     customer.addOrder(Product(
-                      Random().nextInt(1000000),
                       productName!,
                       productNumber!,
                       (quantity!.toString() + weight!.toString()),

@@ -1,4 +1,6 @@
 /// A placeholder class that represents an entity or model.
+import 'package:uuid/uuid.dart';
+
 class SampleItem {
   const SampleItem(this.id);
 
@@ -6,9 +8,10 @@ class SampleItem {
 }
 
 class Customer {
-  Customer(this.id, this.name, this.phoneNumber, this.orders);
+  Customer(this.name, this.phoneNumber, this.orders)
+  : id = const Uuid().v4();
 
-  final int id;
+  final String id;
   final String name;
   final String phoneNumber;
   List<Product> orders = [];
@@ -23,9 +26,14 @@ class Customer {
 }
 
 class Product {
-  const Product(this.id, this.name, this.productNumber, this.quantity);
-  final int id;
+  Product(this.name, this.productNumber, this.quantity)
+        : id = const Uuid().v4();// Generate a unique ID using uuid package
+
+  final String id;
   final String name;
   final int productNumber;
   final String quantity;
 }
+
+
+

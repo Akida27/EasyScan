@@ -12,7 +12,7 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            //automaticallyImplyLeading: false,
+            automaticallyImplyLeading: false,
             /* title: const Text('Login'),
           centerTitle: true, */
             ),

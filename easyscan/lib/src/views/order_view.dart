@@ -72,6 +72,7 @@ class OrdersView extends StatelessWidget {
                   onPressed: () {
                     // Show the bottom sheet
                     showModalBottomSheet(
+                      useSafeArea: true,
                       context: context,
                       builder: (context) => BottomSheetView(c: customer),
                     );

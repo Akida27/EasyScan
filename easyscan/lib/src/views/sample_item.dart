@@ -1,4 +1,3 @@
-/// A placeholder class that represents an entity or model.
 import 'package:uuid/uuid.dart';
 
 class SampleItem {
@@ -8,8 +7,7 @@ class SampleItem {
 }
 
 class Customer {
-  Customer(this.name, this.phoneNumber, this.orders)
-  : id = const Uuid().v4();
+  Customer(this.name, this.phoneNumber, this.orders) : id = const Uuid().v4();
 
   final String id;
   final String name;
@@ -27,13 +25,10 @@ class Customer {
 
 class Product {
   Product(this.name, this.productNumber, this.quantity)
-        : id = const Uuid().v4();// Generate a unique ID using uuid package
+      : id = const Uuid().v4(); // Generate a unique ID using uuid package
 
   final String id;
   final String name;
   final int productNumber;
   final String quantity;
 }
-
-
-

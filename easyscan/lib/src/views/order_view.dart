@@ -77,7 +77,7 @@ class OrdersView extends StatelessWidget {
                     );
                   },
                   child: const Text(
-                    'Bekräfta',
+                    'Beställ',
                     style: TextStyle(
                       fontSize: 20,
                     ),
@@ -116,5 +116,4 @@ class OrdersView extends StatelessWidget {
       ),
     );
   }
-  
 }

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:easyscan/src/views/sample_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AddProductScreen extends StatelessWidget {
-  const AddProductScreen({Key? key});
+  const AddProductScreen({super.key});
 
   static const routeName = '/add_product_screen';
 

@@ -2,6 +2,7 @@ import 'package:easyscan/src/views/add_product_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'views/bottom_sheet_view.dart';
 import 'views/customer_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
@@ -76,6 +77,8 @@ class MyApp extends StatelessWidget {
                   case OrdersView.routeName:
                     //  make sure that you're passing the Customer object when navigating to the OrdersView.
                     return const OrdersView();
+                  // case BottomSheetView.routeName: 
+                  //   return const BottomSheetView();
                   case AddProductScreen.routeName:
                     return const AddProductScreen();
                   case SettingsView.routeName:

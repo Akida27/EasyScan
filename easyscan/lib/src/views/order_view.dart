@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'add_product_view.dart';
+import 'bottom_sheet_view.dart';
 import 'sample_item.dart';
 
 class OrdersView extends StatelessWidget {
@@ -51,7 +52,7 @@ class OrdersView extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 16, top: 16),
+            padding: const EdgeInsets.only(bottom: 30, top: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -64,9 +65,20 @@ class OrdersView extends StatelessWidget {
                     backgroundColor: const Color(0xffEEB53A), // background
                     foregroundColor: const Color(0xff39328F), // foreground
                   ),
-                  onPressed: () {},
+                  // onPressed: () {
+                  //   Navigator.pushNamed(context, BottomSheetView.routeName,
+                  //       arguments: customer);
+                  // },
+                  onPressed: () {
+                    // Show the bottom sheet
+                    showModalBottomSheet(
+                      useSafeArea: true,
+                      context: context,
+                      builder: (context) => BottomSheetView(c: customer),
+                    );
+                  },
                   child: const Text(
-                    'Bekräfta',
+                    'Beställ',
                     style: TextStyle(
                       fontSize: 20,
                     ),

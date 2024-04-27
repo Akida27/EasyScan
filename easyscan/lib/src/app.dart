@@ -1,7 +1,6 @@
 import 'package:easyscan/src/views/add_product_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
 import 'views/customer_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';

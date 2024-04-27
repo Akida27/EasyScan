@@ -1,12 +1,17 @@
 import 'package:easyscan/src/views/sample_item.dart';
 
 List<Customer> customers = [
-  Customer( "Jossef", "+46923213213", [
-    Product( "Almonds", 12345, "5x10 kg"),
+  Customer("Jossef", "+46923213213", [
+    Product("Almonds", 12345, "5x10 kg"),
     Product("Cashews", 23456, "20x5 kg"),
+    Product("Apples", 34567, "10x1 kg"),
+    Product("Oranges", 45678, "10x1 kg"),
+    Product("Pears", 56789, "10x1 kg"),
+    Product("Grapes", 67890, "10x1 kg"),
+    Product("Strawberries", 78901, "10x1 kg"),
   ]),
-  Customer("Adam", "+46923413213", [
-    Product( "Peanuts", 34567, "15x10 kg"),
+  Customer("Shukriya", "+46923413213", [
+    Product("Peanuts", 34567, "15x10 kg"),
     Product("Walnuts", 45678, "10x20 kg"),
   ]),
   Customer("John", "+46923213213", [

@@ -3,21 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AddProductScreen extends StatelessWidget {
-  const AddProductScreen({super.key});
+  const AddProductScreen({super.key, this.product, this.customer});
 
   static const routeName = '/add_product_screen';
+  final Product? product;
+  final Customer? customer;
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final Customer customer =
-        ModalRoute.of(context)!.settings.arguments as Customer;
 
     final formKey = GlobalKey<FormState>();
     String? productName;
     int? productNumber;
     int? quantity;
     String? weight;
+
+    final pro = product?.quantity.split('x');
 
     return Scaffold(
       appBar: AppBar(
@@ -31,6 +33,7 @@ class AddProductScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextFormField(
+                initialValue: product?.name,
                 decoration: const InputDecoration(
                   labelText: 'Produkt Namn',
                 ),
@@ -47,6 +50,7 @@ class AddProductScreen extends StatelessWidget {
               ),
               SizedBox(height: height * 0.01),
               TextFormField(
+                initialValue: product?.productNumber.toString(),
                 decoration: const InputDecoration(
                   labelText: 'Artikelnummer',
                 ),
@@ -69,6 +73,7 @@ class AddProductScreen extends StatelessWidget {
               ),
               SizedBox(height: height * 0.01),
               TextFormField(
+                initialValue: pro?[0],
                 decoration: const InputDecoration(
                   labelText: 'Antal',
                   hintText: 'Ex 10',
@@ -90,9 +95,10 @@ class AddProductScreen extends StatelessWidget {
               ),
               SizedBox(height: height * 0.01),
               TextFormField(
+                initialValue: pro?[1],
                 decoration: const InputDecoration(
-                  labelText: 'Vikt',
-                  hintText: 'Ex 20 kg',
+                  labelText: 'Vikt (kg)',
+                  hintText: 'Ex 20',
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
@@ -103,7 +109,7 @@ class AddProductScreen extends StatelessWidget {
                   }
                   return null;
                 },
-                onSaved: (value) => weight = 'x$value kg',
+                onSaved: (value) => weight = 'x',
               ),
               SizedBox(height: height * 0.03),
               ElevatedButton(
@@ -118,7 +124,7 @@ class AddProductScreen extends StatelessWidget {
                 onPressed: () {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    customer.addOrder(Product(
+                    customer?.addOrder(Product(
                       productName!,
                       productNumber!,
                       (quantity!.toString() + weight!.toString()),

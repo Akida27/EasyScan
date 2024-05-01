@@ -23,9 +23,13 @@ class OrdersView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // Handle onPressed to navigate to the add product screen
-              Navigator.pushNamed(context, AddProductScreen.routeName,
-                  arguments: customer);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      AddProductScreen(customer: customer),
+                ),
+              );
             },
           ),
         ],
@@ -41,7 +45,32 @@ class OrdersView extends StatelessWidget {
                   final order = orders[index];
 
                   return ListTile(
-                    title: Text("${order.name} - ${order.quantity}"),
+                    trailing: PopupMenuButton(
+                      icon: const Icon(Icons.more_vert),
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem(
+                          child: const Text('Redigera'),
+                          value: order,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    AddProductScreen(product: order),
+                              ),
+                            );
+                          },
+                        ),
+                        PopupMenuItem(
+                          child: const Text('Ta bort'),
+                          value: order,
+                          onTap: () {
+                            customer.removeOrder(order);
+                          },
+                        ),
+                      ],
+                    ),
+                    title: Text("${order.name} - ${order.quantity} kg"),
                     subtitle: Text(
                       "Artikelnummer: ${order.productNumber}",
                       style: const TextStyle(color: Color(0xff8E8A91)),

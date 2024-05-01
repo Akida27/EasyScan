@@ -1,28 +1,13 @@
 import 'package:flutter/material.dart';
 import 'sample_item.dart';
-
-class BottomSheetView extends StatefulWidget {
+class BottomSheetView extends StatelessWidget {
   const BottomSheetView({super.key, required this.c});
   static const routeName = '/bottomSheet_view';
   final Customer c;
 
   @override
-  State<BottomSheetView> createState() => _BottomSheetViewState();
-}
-
-class _BottomSheetViewState extends State<BottomSheetView> {
-  late List<bool> isCheckedList; // List to store checked-status for each item
-
-  @override
-  void initState() {
-    super.initState();
-    // Initiate isCheckedList med true for each order
-    isCheckedList = List<bool>.filled(widget.c.orders.length, false);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final orders = widget.c.orders;
+        final orders = c.orders;
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Column(
@@ -44,27 +29,19 @@ class _BottomSheetViewState extends State<BottomSheetView> {
                 itemCount: orders.length,
                 itemBuilder: (BuildContext context, int index) {
                   final order = orders[index];
-                  return CheckboxListTile(
+                  return ListTile(
                     title: Text("${order.name} - ${order.quantity}"),
                     subtitle: Text(
                       "Artikelnummer: ${order.productNumber}",
                       style: const TextStyle(color: Color(0xff8E8A91)),
                     ),
-                    // Använd isCheckedList för varje objekt
-                    value: isCheckedList[index],
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        // Uppdatera isCheckedList för aktuellt index
-                        isCheckedList[index] = newValue ?? false;
-                      });
-                    },
                   );
                 },
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 15, top: 15),
+            padding: const EdgeInsets.only(bottom: 30, top: 15),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 fixedSize: const Size(175, 60),

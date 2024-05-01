@@ -1,4 +1,4 @@
-import 'package:easyscan/src/views/add_product_view.dart';
+import 'package:easyscan/src/views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'views/customer_view.dart';
@@ -72,6 +72,8 @@ class MyApp extends StatelessWidget {
                     return const SignupView();
                   case CustomersView.routeName:
                     return const CustomersView();
+                  case ScanView.routeName:
+                    return const ScanView();
                   case OrdersView.routeName:
                     //  make sure that you're passing the Customer object when navigating to the OrdersView.
                     return const OrdersView();

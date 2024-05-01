@@ -18,6 +18,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   shared_preferences: ^2.2.3
+  qr_code_scanner: ^1.0.1
 
 dev_dependencies:
   flutter_test:

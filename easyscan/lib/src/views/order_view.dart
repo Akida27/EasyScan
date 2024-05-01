@@ -1,3 +1,4 @@
+import 'package:easyscan/src/views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'add_product_view.dart';
 import 'bottom_sheet_view.dart';
@@ -49,7 +50,6 @@ class OrdersView extends StatelessWidget {
                       icon: const Icon(Icons.more_vert),
                       itemBuilder: (BuildContext context) => [
                         PopupMenuItem(
-                          child: const Text('Redigera'),
                           value: order,
                           onTap: () {
                             Navigator.push(
@@ -60,13 +60,14 @@ class OrdersView extends StatelessWidget {
                               ),
                             );
                           },
+                          child: const Text('Redigera'),
                         ),
                         PopupMenuItem(
-                          child: const Text('Ta bort'),
                           value: order,
                           onTap: () {
                             customer.removeOrder(order);
                           },
+                          child: const Text('Ta bort'),
                         ),
                       ],
                     ),
@@ -122,7 +123,9 @@ class OrdersView extends StatelessWidget {
                     backgroundColor: const Color(0xff39328F), // background
                     foregroundColor: const Color(0xffCAC4D0), // foreground
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.restorablePushNamed(context, ScanView.routeName);
+                  },
                   child: const Row(
                     children: [
                       Icon(

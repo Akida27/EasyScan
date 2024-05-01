@@ -75,8 +75,6 @@ class MyApp extends StatelessWidget {
                   case OrdersView.routeName:
                     //  make sure that you're passing the Customer object when navigating to the OrdersView.
                     return const OrdersView();
-                  case AddProductScreen.routeName:
-                    return const AddProductScreen();
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);
                   default:

@@ -14,15 +14,33 @@ class _ScanViewState extends State<ScanView> {
   QRViewController? controller;
   bool scanStarted = false;
 
+  // Cache for scan results
+  Map<String, dynamic> _scanCache = {};
+
+  @override
+  void initState() {
+    super.initState();
+    controller?.resumeCamera();
+  }
+
   @override
   void dispose() {
+    controller?.pauseCamera();
     controller?.dispose();
     super.dispose();
   }
 
   @override
+  void reassemble() {
+    super.reassemble();
+    if (controller != null) {
+      controller?.pauseCamera();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
+    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
@@ -33,9 +51,12 @@ class _ScanViewState extends State<ScanView> {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 57.0),
-            child: SizedBox(
+            child: Container(
               width: width / 1.2,
               height: width / 1.2,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
               child: _buildQrView(context),
             ),
           ),
@@ -48,6 +69,13 @@ class _ScanViewState extends State<ScanView> {
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
+      overlay: QrScannerOverlayShape(
+        borderColor: Colors.greenAccent,
+        borderRadius: 10,
+        borderLength: 30,
+        borderWidth: 10,
+        cutOutSize: MediaQuery.of(context).size.width * 0.77,
+      ),
     );
   }
 
@@ -56,9 +84,72 @@ class _ScanViewState extends State<ScanView> {
       this.controller = controller;
       scanStarted = true;
     });
+
     controller.scannedDataStream.listen((scanData) {
-      // Handle the scanned QR code data here
-      print(scanData.code);
+      // Validate input
+      if (_isScanDataValid(scanData)) {
+        _logScanResult(scanData);
+        _handleScanData(scanData);
+      } else {
+        _handleInvalidScanData(scanData);
+      }
     });
+  }
+
+  bool _isScanDataValid(dynamic data) {
+    if (data == null || data.code == null) {
+      return false;
+    }
+
+    if (data.code.length < 5) {
+      return false;
+    }
+
+    return true;
+  }
+
+  void _logScanResult(dynamic data) {
+    print('Scanned: ${data.code}');
+  }
+
+  void _handleInvalidScanData(dynamic data) {
+    print('Invalid scan data received: ${data.code}');
+  }
+
+  void _handleScanData(dynamic scanData) {
+    String scanKey = scanData.code;
+
+    if (_scanCache.containsKey(scanKey)) {
+      print('Using cached result for: $scanKey');
+      scanData = _scanCache[scanKey];
+    } else {
+      _scanCache[scanKey] = scanData;
+    }
+
+    switch (scanData.code) {
+      case 'case1':
+        _handleCase1(scanData);
+        break;
+
+      case 'case2':
+        _handleCase2(scanData);
+        break;
+
+      default:
+        _handleDefaultCase(scanData);
+        break;
+    }
+  }
+
+  void _handleCase1(dynamic data) {
+    // Case 1 logic
+  }
+
+  void _handleCase2(dynamic data) {
+    // Case 2 logic
+  }
+
+  void _handleDefaultCase(dynamic data) {
+    // Default case logic
   }
 }

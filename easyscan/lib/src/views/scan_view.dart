@@ -4,7 +4,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 class ScanView extends StatefulWidget {
   const ScanView({super.key});
   @override
-  _ScanViewState createState() => _ScanViewState();
+  State<ScanView> createState() => _ScanViewState();
 
   static const routeName = '/scan_view';
 }

@@ -1,8 +1,8 @@
+import 'package:easyscan/src/data/customer_data.dart';
 import 'package:easyscan/src/views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'add_product_view.dart';
 import 'bottom_sheet_view.dart';
-import 'sample_item.dart';
 
 class OrdersView extends StatelessWidget {
   const OrdersView({

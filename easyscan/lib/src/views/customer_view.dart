@@ -1,10 +1,10 @@
 import 'package:easyscan/src/constants/customer.dart';
+import 'package:easyscan/src/data/customer_data.dart';
 import 'package:flutter/material.dart';
 //import 'package:easy_search_bar/easy_search_bar.dart';
 
 import '../settings/settings_view.dart';
 import 'order_view.dart';
-import 'sample_item.dart';
 
 class CustomersView extends StatefulWidget {
   const CustomersView({super.key});

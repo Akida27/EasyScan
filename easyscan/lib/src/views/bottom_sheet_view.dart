@@ -1,5 +1,6 @@
+import 'package:easyscan/src/data/customer_data.dart';
 import 'package:flutter/material.dart';
-import 'sample_item.dart';
+
 class BottomSheetView extends StatelessWidget {
   const BottomSheetView({super.key, required this.c});
   static const routeName = '/bottomSheet_view';
@@ -7,7 +8,7 @@ class BottomSheetView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        final orders = c.orders;
+    final orders = c.orders;
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Column(

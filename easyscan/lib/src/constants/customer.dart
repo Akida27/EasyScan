@@ -1,4 +1,5 @@
-import 'package:easyscan/src/views/sample_item.dart';
+import 'package:easyscan/src/data/customer_data.dart';
+import 'package:easyscan/src/data/product_data.dart';
 
 List<Customer> customers = [
   Customer("Jossef", "+46923213213", [

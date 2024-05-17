@@ -37,19 +37,20 @@ class _MyAppState extends State<MyApp> {
       _sub = uriLinkStream.listen((Uri? uri) {
         if (uri != null) {
           // Handle the deep link
-          print('Received deep link: $uri');
+          debugPrint('Received deep link: $uri');
         }
       }, onError: (err) {
         // Handle error
       });
     } on Exception catch (e) {
       // Handle exception
+      debugPrint('Received deep link: $e');
     }
   }
 
   @override
   void dispose() {
-    _sub?.cancel();
+    _sub.cancel();
     super.dispose();
   }
 

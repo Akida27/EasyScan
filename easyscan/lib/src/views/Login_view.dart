@@ -65,7 +65,7 @@ Future<void> _launchUrl() async {
     print('_launchUrl');
   }
   const url =
-      'https://apps.fortnox.se/oauth-v1/auth?client_id=7YFbHiTM1Avu&scope=customer%20article&state=somestate123&access_type=offline&response_type=code&account_type=service';
+      'https://apps.fortnox.se/oauth-v1/auth?client_id=7YFbHiTM1Avu&scope=customer%20article&state=solid&access_type=offline&response_type=code&account_type=service';
   if (await canLaunchUrlString(url)) {
     await launchUrlString(url);
   } else {

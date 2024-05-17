@@ -1,21 +1,57 @@
+import 'dart:async';
+
+import 'package:easyscan/main.dart';
 import 'package:easyscan/src/views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:uni_links/uni_links.dart';
 import 'views/customer_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 import 'views/login_view.dart';
 import 'views/order_view.dart';
-import 'views/sign_up_view.dart';
 
 /// The Widget that configures your application.
-class MyApp extends StatelessWidget {
-  const MyApp({
+class MyApp extends StatefulWidget {
+  MyApp({
     super.key,
     required this.settingsController,
   });
 
   final SettingsController settingsController;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late StreamSubscription _sub;
+  @override
+  void initState() {
+    super.initState();
+    initUniLinks();
+  }
+
+  Future<void> initUniLinks() async {
+    try {
+      _sub = uriLinkStream.listen((Uri? uri) {
+        if (uri != null) {
+          // Handle the deep link
+          print('Received deep link: $uri');
+        }
+      }, onError: (err) {
+        // Handle error
+      });
+    } on Exception catch (e) {
+      // Handle exception
+    }
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +60,10 @@ class MyApp extends StatelessWidget {
     // The ListenableBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
     return ListenableBuilder(
-      listenable: settingsController,
+      listenable: widget.settingsController,
       builder: (BuildContext context, Widget? child) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           // Providing a restorationScopeId allows the Navigator built by the
           // MaterialApp to restore the navigation stack when a user leaves and
@@ -59,7 +96,7 @@ class MyApp extends StatelessWidget {
           // SettingsController to display the correct theme.
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
-          themeMode: settingsController.themeMode,
+          themeMode: widget.settingsController.themeMode,
 
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
@@ -68,8 +105,6 @@ class MyApp extends StatelessWidget {
               settings: routeSettings,
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
-                  case SignupView.routeName:
-                    return const SignupView();
                   case CustomersView.routeName:
                     return const CustomersView();
                   case ScanView.routeName:
@@ -78,7 +113,7 @@ class MyApp extends StatelessWidget {
                     //  make sure that you're passing the Customer object when navigating to the OrdersView.
                     return const OrdersView();
                   case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
+                    return SettingsView(controller: widget.settingsController);
                   default:
                     return const LoginView();
                 }

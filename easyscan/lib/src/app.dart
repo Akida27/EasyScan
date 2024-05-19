@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:easyscan/main.dart';
 import 'package:easyscan/src/views/scan_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:uni_links/uni_links.dart';
@@ -33,18 +34,34 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initUniLinks() async {
+    if (kDebugMode) {
+      print('_initUniLinks');
+    }
     try {
       _sub = uriLinkStream.listen((Uri? uri) {
-        if (uri != null) {
-          // Handle the deep link
+        if (uri != null && uri.scheme == 'myapp' && uri.host == 'callback') {
           debugPrint('Received deep link: $uri');
+          final code = uri.queryParameters['code'];
+          // Perform necessary actions, e.g., navigate to another screen
+          if (code != null) {
+            _handleLoginCallback(code);
+          }
         }
-      }, onError: (err) {
-        // Handle error
       });
-    } on Exception catch (e) {
+    } catch (e) {
       // Handle exception
-      debugPrint('Received deep link: $e');
+      if (kDebugMode) {
+        print('initUniLinks catched: $e');
+      }
+    }
+  }
+
+  void _handleLoginCallback(String code) {
+    if (kDebugMode) {
+      print('_handleLoginCallback');
+    }
+    if (kDebugMode) {
+      print('Authorization code:: $code');
     }
   }
 

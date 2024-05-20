@@ -8,8 +8,7 @@ class AddProductScreen extends StatelessWidget {
 
   static const routeName = '/add_product_screen';
   final Product? product;
-  final Customer? customer;
-
+  final dynamic customer;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;

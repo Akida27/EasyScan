@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class BottomSheetView extends StatelessWidget {
   const BottomSheetView({super.key, required this.c});
   static const routeName = '/bottomSheet_view';
-  final Customer c;
+  final dynamic c;
 
   @override
   Widget build(BuildContext context) {

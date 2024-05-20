@@ -1,25 +1,127 @@
+import 'dart:convert';
 import 'package:easyscan/src/data/customer_data.dart';
 import 'package:easyscan/src/views/scan_view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'add_product_view.dart';
 import 'bottom_sheet_view.dart';
+import 'package:http/http.dart' as http;
 
-class OrdersView extends StatelessWidget {
+class OrdersView extends StatefulWidget {
+  final String accessToken;
+  final Map customer;
+
   const OrdersView({
     super.key,
+    required this.accessToken,
+    required this.customer,
   });
 
   static const routeName = '/orders_view';
 
   @override
-  Widget build(BuildContext context) {
-    final Customer customer =
-        ModalRoute.of(context)?.settings.arguments as Customer;
-    final orders = customer.orders;
+  State<OrdersView> createState() => _OrdersViewState();
+}
 
+class _OrdersViewState extends State<OrdersView> {
+  dynamic orders;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    fetchOrders(widget.customer['CustomerNumber']);
+  }
+
+  Future<void> fetchOrders(String customerNumber) async {
+    const String apiUrl = 'https://api.fortnox.se/3/orders';
+    final String accessToken = widget.accessToken;
+
+    if (kDebugMode) {
+      print('OrdersView accessToken: $accessToken');
+    }
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        if (kDebugMode) {
+          print('Response body: $responseBody');
+          print('Response body fetchOrders : ${responseBody['OrderRows']}');
+        }
+        setState(() {
+          orders = (responseBody['Orders'] as List)
+              .where((order) => order['CustomerNumber'] == customerNumber)
+              .toList();
+        });
+
+        if (orders.isNotEmpty) {
+          // Fetch articles for the first order as an example
+          fetchArticles(orders[0]['DocumentNumber']);
+        }
+      } else {
+        if (kDebugMode) {
+          print('Failed to load orders: ${response.statusCode}');
+          print('Response body: ${response.body}');
+        }
+        throw Exception('Failed to load orders');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> fetchArticles(String documentNumber) async {
+    if (kDebugMode) {
+      print('Response body: fetchArticles');
+    }
+    final String apiUrl = 'https://api.fortnox.se/3/orders/$documentNumber';
+    final String accessToken = widget.accessToken;
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        if (kDebugMode) {
+          print('Response body: $responseBody');
+          print('Response body: ${responseBody['OrderRows']}');
+        }
+        setState(() {
+          orders = responseBody['OrderRows'];
+        });
+      } else {
+        if (kDebugMode) {
+          print('Failed to load orders: ${response.statusCode}');
+          print('Response body: ${response.body}');
+        }
+        throw Exception('Failed to load orders');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+    if (kDebugMode) {
+      print('fetchArticles orders: $orders');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders för ${customer.name}'),
+        title: Text('Orders for ${widget.customer['Name']}'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -28,7 +130,7 @@ class OrdersView extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (BuildContext context) =>
-                      AddProductScreen(customer: customer),
+                      AddProductScreen(customer: widget.customer),
                 ),
               );
             },
@@ -65,15 +167,17 @@ class OrdersView extends StatelessWidget {
                         PopupMenuItem(
                           value: order,
                           onTap: () {
-                            customer.removeOrder(order);
+                            setState(() {
+                              orders.remove(order);
+                            });
                           },
                           child: const Text('Ta bort'),
                         ),
                       ],
                     ),
-                    title: Text("${order.name} - ${order.quantity} kg"),
+                    title: Text("${order['sent']} - ${order['quantity']} kg"),
                     subtitle: Text(
-                      "Artikelnummer: ${order.productNumber}",
+                      "Artikelnummer: ${order['productNumber']}",
                       style: const TextStyle(color: Color(0xff8E8A91)),
                     ),
                   );
@@ -92,19 +196,14 @@ class OrdersView extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    backgroundColor: const Color(0xffEEB53A), // background
-                    foregroundColor: const Color(0xff39328F), // foreground
+                    backgroundColor: const Color(0xffEEB53A),
+                    foregroundColor: const Color(0xff39328F),
                   ),
-                  // onPressed: () {
-                  //   Navigator.pushNamed(context, BottomSheetView.routeName,
-                  //       arguments: customer);
-                  // },
                   onPressed: () {
-                    // Show the bottom sheet
                     showModalBottomSheet(
                       useSafeArea: true,
                       context: context,
-                      builder: (context) => BottomSheetView(c: customer),
+                      builder: (context) => BottomSheetView(c: widget.customer),
                     );
                   },
                   child: const Text(
@@ -120,8 +219,8 @@ class OrdersView extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
                     ),
-                    backgroundColor: const Color(0xff39328F), // background
-                    foregroundColor: const Color(0xffCAC4D0), // foreground
+                    backgroundColor: const Color(0xff39328F),
+                    foregroundColor: const Color(0xffCAC4D0),
                   ),
                   onPressed: () {
                     Navigator.restorablePushNamed(context, ScanView.routeName);

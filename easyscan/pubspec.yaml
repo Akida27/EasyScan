@@ -22,6 +22,7 @@ dependencies:
   vibration: ^1.8.4
   uni_links: ^0.5.1
   url_launcher: ^6.0.12
+  http: ^1.2.1
 
 
 dev_dependencies:

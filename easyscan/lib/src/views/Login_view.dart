@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:url_launcher/url_launcher.dart';
 
 final Uri _url = Uri.parse(
-    'https://apps.fortnox.se/oauth-v1/auth?client_id=7YFbHiTM1Avu&redirect_uri=myapp://callback&scope=customer%20article&state=solid&access_type=offline&response_type=code&account_type=service');
+    'https://apps.fortnox.se/oauth-v1/auth?client_id=7YFbHiTM1Avu&redirect_uri=myapp://callback&scope=customer%20article%20order&state=solid&access_type=offline&response_type=code&account_type=service');
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});

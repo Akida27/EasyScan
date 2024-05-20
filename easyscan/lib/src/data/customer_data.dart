@@ -17,3 +17,13 @@ class Customer {
     orders.remove(product);
   }
 }
+
+class Article {
+  Article(this.name, this.articleNumber, this.quantity)
+      : id = const Uuid().v4(); // Generate a unique ID using uuid package
+
+  final String id;
+  final String name;
+  final int articleNumber;
+  final String quantity;
+}

@@ -219,7 +219,7 @@ class _OrdersViewState extends State<OrdersView> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                        left: 33.0, right: 33, bottom: 10, top: 10),
+                        left: 27.0, right: 27, bottom: 10, top: 10),
                     child: orders.isNotEmpty
                         ? Row(
                             children: [
@@ -236,11 +236,12 @@ class _OrdersViewState extends State<OrdersView> {
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(170, 60),
+                                padding: const EdgeInsets.all(4),
+                                fixedSize: const Size(170, 65),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
@@ -264,7 +265,8 @@ class _OrdersViewState extends State<OrdersView> {
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(175, 60),
+                                padding: const EdgeInsets.all(4),
+                                fixedSize: const Size(170, 65),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
@@ -275,21 +277,32 @@ class _OrdersViewState extends State<OrdersView> {
                                 Navigator.restorablePushNamed(
                                     context, ScanView.routeName);
                               },
-                              child: const Row(
-                                children: [
-                                  Icon(
-                                    Icons.qr_code_scanner,
-                                    color: Color.fromARGB(255, 216, 212, 212),
+                              child: const ListTile(
+                                contentPadding: EdgeInsets.only(left: 18),
+                                title: Text(
+                                  softWrap: false,
+                                  'Skanna',
+                                  style: TextStyle(
+                                    fontSize: 20,
                                   ),
-                                  SizedBox(width: 10),
-                                  Text(
-                                    'Skanna',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ],
+                                ),
+                                leading: Icon(
+                                  Icons.qr_code_scanner,
+                                  color: Color.fromARGB(255, 216, 212, 212),
+                                ),
+                                trailing: null,
                               ),
+                              /* Icon(
+                                Icons.qr_code_scanner,
+                                color: Color.fromARGB(255, 216, 212, 212),
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'Skanna',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ), */
                             ),
                           ],
                         ),

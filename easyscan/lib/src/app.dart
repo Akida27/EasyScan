@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import 'package:easyscan/src/services/auth_service.dart';
 import 'package:easyscan/src/views/scan_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +9,12 @@ import 'views/customer_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 import 'views/login_view.dart';
-import 'views/order_view.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 /// The Widget that configures your application.
 class MyApp extends StatefulWidget {
-  MyApp({
+  const MyApp({
     super.key,
     required this.settingsController,
   });
@@ -29,6 +27,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late StreamSubscription _sub;
+  final AuthService authService = AuthService();
   @override
   void initState() {
     super.initState();
@@ -41,7 +40,7 @@ class _MyAppState extends State<MyApp> {
     }
     try {
       _sub = uriLinkStream.listen((Uri? uri) {
-        if (uri != null && uri.scheme == 'myapp' && uri.host == 'callback') {
+        if (uri != null && uri.scheme == 'easyscan' && uri.host == 'callback') {
           debugPrint('Received deep link: $uri');
           final code = uri.queryParameters['code'];
           // Perform necessary actions, e.g., navigate to another screen
@@ -53,42 +52,17 @@ class _MyAppState extends State<MyApp> {
     } catch (e) {
       // Handle exception
       if (kDebugMode) {
-        print('initUniLinks catched: $e');
+        print('initUniLinks cached: $e');
       }
     }
   }
 
-  // void _handleLoginCallback(String code) {
-  //   if (kDebugMode) {
-  //     print('_handleLoginCallback');
-  //     print('Authorization code: $code');
-  //   }
-  //   // Ensure navigatorKey is not null and then navigate
-  //   if (navigatorKey.currentState != null) {
-  //     if (kDebugMode) {
-  //       print('Navigator state is not null, pushing to CustomersView');
-  //     }
-  //     navigatorKey.currentState?.pushNamed(CustomersView.routeName);
-  //   } else {
-  //     if (kDebugMode) {
-  //       print('Navigator state is null, cannot push to CustomersView');
-  //     }
-  //   }
-  // }
-  void _handleLoginCallback(String code) async {
-    if (kDebugMode) {
-      print('_handleLoginCallback');
-      print('Authorization code: $code');
-    }
-
-    final String accessToken = await fetchAccessToken(code);
-
-    // Ensure navigatorKey is not null and then navigate
+  void navigateToCustomersView(String accessToken) {
     if (navigatorKey.currentState != null) {
       if (kDebugMode) {
         print('Navigator state is not null, pushing to CustomersView');
       }
-      navigatorKey.currentState?.push(
+      navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(
           builder: (context) => CustomersView(accessToken: accessToken),
         ),
@@ -100,40 +74,18 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<String> fetchAccessToken(String code) async {
-    // Make HTTP POST request to get access token
-    // Replace 'yourClientId', 'yourClientSecret', and 'redirectUri' with actual values
-    const String apiUrl = 'https://apps.fortnox.se/oauth-v1/token';
-    const String clientId = '7YFbHiTM1Avu';
-    const String clientSecret = '5fmmL6adDb';
-    const String redirectUri = 'myapp://callback';
-
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization':
-            'Basic ${base64.encode(utf8.encode('$clientId:$clientSecret'))}',
-      },
-      body: {
-        'code': code,
-        'grant_type': 'authorization_code',
-        'redirect_uri': redirectUri,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      return data['access_token'];
-    } else {
-      throw Exception('Failed to fetch access token');
+  void _handleLoginCallback(String code) async {
+    if (kDebugMode) {
+      print('_handleLoginCallback');
+      print('Authorization code: $code');
     }
-  }
 
-  @override
-  void dispose() {
-    _sub.cancel();
-    super.dispose();
+    await authService.fetchTokens(code);
+
+    final String? accessToken = await authService.getStoredToken('accessToken');
+    if (accessToken != null) {
+      navigateToCustomersView(accessToken);
+    }
   }
 
   @override
@@ -190,12 +142,12 @@ class _MyAppState extends State<MyApp> {
                 switch (routeSettings.name) {
                   case ScanView.routeName:
                     return const ScanView();
-                  // case OrdersView.routeName:
-                  //   return const OrdersView();
+                  /* case CustomersView.routeName:
+                    return const CustomersView(); */
                   case SettingsView.routeName:
                     return SettingsView(controller: widget.settingsController);
                   default:
-                    return const LoginView();
+                    return LoginView();
                 }
               },
             );
@@ -203,5 +155,11 @@ class _MyAppState extends State<MyApp> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _sub.cancel();
+    super.dispose();
   }
 }

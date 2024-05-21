@@ -1,4 +1,3 @@
-import 'package:easyscan/src/data/customer_data.dart';
 import 'package:easyscan/src/data/product_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

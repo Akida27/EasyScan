@@ -1,16 +1,19 @@
+import 'package:easyscan/src/services/auth_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:uni_links/uni_links.dart';
 import 'dart:async';
 
 import 'package:url_launcher/url_launcher.dart';
 
+import 'customer_view.dart';
+
 final Uri _url = Uri.parse(
-    'https://apps.fortnox.se/oauth-v1/auth?client_id=7YFbHiTM1Avu&redirect_uri=myapp://callback&scope=customer%20article%20order&state=solid&access_type=offline&response_type=code&account_type=service');
+    'https://apps.fortnox.se/oauth-v1/auth?client_id=7YFbHiTM1Avu&redirect_uri=easyscan://callback&scope=customer%20article%20order&state=solid&access_type=offline&response_type=code&account_type=service');
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  LoginView({super.key});
   static const routeName = '/login_view';
+  final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,11 @@ class LoginView extends StatelessWidget {
                   backgroundColor: const Color(0xffEEB53A), // background
                   foregroundColor: const Color(0xff39328F), // foreground
                 ),
-                onPressed: () => _launchUrl(),
+                onPressed: () async {
+                  await authService.isAccessTokenValid()
+                      ? checkStoredTokens(context)
+                      : _launchUrl();
+                },
                 child: const Text(
                   'Logga in med Fortnox',
                   style: TextStyle(
@@ -62,6 +69,32 @@ class LoginView extends StatelessWidget {
     }
     if (!await launchUrl(_url)) {
       throw Exception('Could not launch $_url');
+    }
+  }
+
+  Future<void> checkStoredTokens(context) async {
+    String? accessToken = await authService.getStoredToken('accessToken');
+    String? refreshToken = await authService.getStoredToken('refreshToken');
+    if (kDebugMode) {
+      //print('$accessToken, $refreshToken');
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CustomersView(accessToken: accessToken!),
+      ),
+    );
+    if (accessToken != null && await authService.isAccessTokenValid()) {
+      // Navigate directly to CustomersView if access token is valid
+    } else if (refreshToken != null) {
+      // Refresh the access token if the refresh token is available
+      accessToken = await authService.refreshAccessToken(refreshToken);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CustomersView(accessToken: accessToken!),
+        ),
+      );
     }
   }
 }

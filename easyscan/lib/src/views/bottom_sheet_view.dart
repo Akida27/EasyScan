@@ -1,4 +1,3 @@
-import 'package:easyscan/src/data/customer_data.dart';
 import 'package:flutter/material.dart';
 
 class BottomSheetView extends StatelessWidget {

@@ -232,11 +232,12 @@ class _OrdersViewState extends State<OrdersView> {
                         : const SizedBox(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 30, top: 16),
+                    padding: const EdgeInsets.only(
+                        bottom: 30, top: 16, left: 22, right: 22),
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(

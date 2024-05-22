@@ -140,8 +140,8 @@ class _MyAppState extends State<MyApp> {
               settings: routeSettings,
               builder: (BuildContext context) {
                 switch (routeSettings.name) {
-                  case ScanView.routeName:
-                    return const ScanView();
+                  // case ScanView.routeName:
+                  //   return const ScanView();
                   /* case CustomersView.routeName:
                     return const CustomersView(); */
                   case SettingsView.routeName:

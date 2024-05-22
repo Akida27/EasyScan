@@ -188,7 +188,14 @@ class _OrdersViewState extends State<OrdersView> {
                                         PopupMenuItem(
                                           value: order,
                                           onTap: () {
-                                            // Edit order
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddProductScreen(
+                                                        article: order),
+                                              ),
+                                            );
                                           },
                                           child: const Text('Redigera'),
                                         ),
@@ -204,8 +211,7 @@ class _OrdersViewState extends State<OrdersView> {
                                         ),
                                       ],
                                     ),
-                                    title: Text(
-                                        "${order['Description']} - ${order['Unit']} x ${order['Price']} "),
+                                    title: Text("${order['Description']} "),
                                     subtitle: Text(
                                       "Artikelnummer: ${order['ArticleNumber']}",
                                       style: const TextStyle(

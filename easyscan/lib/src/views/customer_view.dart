@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:easyscan/src/views/order.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -95,7 +96,7 @@ class _CustomersViewState extends State<CustomersView> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => OrdersView(
+                    builder: (context) => OrderView(
                       accessToken: widget.accessToken,
                       customer: customer,
                     ),

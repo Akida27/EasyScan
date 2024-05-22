@@ -1,11 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:easyscan/src/services/auth_service.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:vibration/vibration.dart';
 
 class ScanView extends StatefulWidget {
-  const ScanView({super.key});
+  final String accessToken;
+
+  const ScanView({
+    super.key,
+    required this.accessToken,
+  });
   @override
   State<ScanView> createState() => _ScanViewState();
 
@@ -13,12 +21,18 @@ class ScanView extends StatefulWidget {
 }
 
 class _ScanViewState extends State<ScanView> {
+  final formKey = GlobalKey<FormState>();
+  //dynamic article;
+  final AuthService authService = AuthService();
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   bool scanStarted = false;
   bool processingCode = false;
   String? scannedData;
-
+  String? productName;
+  int? productNumber;
+  int? quantity;
+  int? weight;
   // Cache for scan results
   final Map<String, dynamic> _scanCache = {};
 
@@ -40,6 +54,68 @@ class _ScanViewState extends State<ScanView> {
     controller?.pauseCamera();
     controller?.dispose();
     super.dispose();
+  }
+
+  void _saveForm() {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      final newArticle = {
+        'Description': productName,
+        'ArticleNumber': productNumber,
+        'Quantity': quantity,
+        'Weight': weight,
+        'Price': quantity != null && weight != null ? quantity! * weight! : 0,
+      };
+      Navigator.pop(context, newArticle);
+    }
+  }
+
+  Future fetchArticle(String barcodeNumber) async {
+    String? accessToken = await authService.getStoredToken('accessToken');
+    String? refreshToken = await authService.getStoredToken('refreshToken');
+
+    if (accessToken == null || !(await authService.isAccessTokenValid())) {
+      if (refreshToken != null) {
+        accessToken = await authService.refreshAccessToken(refreshToken);
+      } else {
+        // Handle the case where both tokens are invalid or missing
+        throw Exception('No valid tokens available');
+      }
+    }
+
+    const String apiUrl = 'https://api.fortnox.se/3/articles';
+
+    try {
+      final response = await http.get(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        final List<dynamic> articles = data['Articles'];
+
+        // Filter the articles by barcode number (EAN)
+        final article = articles.firstWhere(
+          (article) => article['EAN'] == barcodeNumber,
+          orElse: () => null,
+        );
+
+        if (article != null) {
+          productName = article['Description'];
+          productNumber = article['ArticleNumber'];
+          quantity = article['Quantity'];
+          weight = article['Weight'];
+          _saveForm();
+        }
+      } else {
+        throw Exception('Failed to load article');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override
@@ -164,6 +240,7 @@ class _ScanViewState extends State<ScanView> {
       });
       // Validate input
       if (_isScanDataValid(scanData)) {
+        fetchArticle(scanData.toString());
         _logScanResult(scanData);
         _handleScanData(scanData);
         setState(() {

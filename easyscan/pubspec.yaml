@@ -24,6 +24,7 @@ dependencies:
   url_launcher: ^6.0.12
   http: ^1.2.1
   intl: ^0.18.1
+  provider: ^6.1.2
 
 
 dev_dependencies:

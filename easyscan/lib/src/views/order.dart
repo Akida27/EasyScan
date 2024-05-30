@@ -1,12 +1,10 @@
-import 'dart:convert';
 import 'package:easyscan/src/services/auth_service.dart';
+import 'package:easyscan/src/services/order_storage.dart';
 import 'package:easyscan/src/views/scan_view.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'add_product_view.dart';
 import 'bottom_sheet_view.dart';
-import 'package:http/http.dart' as http;
 
 class OrderView extends StatefulWidget {
   final String accessToken;
@@ -32,21 +30,40 @@ class _OrdersViewState extends State<OrderView> {
   @override
   void initState() {
     super.initState();
+    loadOrders();
   }
 
-  // Method to handle adding a new article
-  void _addArticle(Map<String, dynamic> article) {
+  Future<void> loadOrders() async {
+    orders = await loadOrdersFromPreferences(widget.customer['CustomerNumber']);
+    setState(() {});
+  }
+
+  void addArticle(Map<String, dynamic> order) {
     setState(() {
-      orders.add(article);
-      //totalPrice += article['Price'];
+      orders.add(order);
+      saveOrdersToPreferences(widget.customer['CustomerNumber'], orders);
+    });
+  }
+
+  void removeArticle(Map<String, dynamic> order) {
+    setState(() {
+      orders.remove(order);
+      saveOrdersToPreferences(widget.customer['CustomerNumber'], orders);
+    });
+  }
+
+  void clearOrders() {
+    setState(() {
+      orders.clear();
+      clearOrdersFromPreferences(widget.customer['CustomerNumber']);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final formattedPrice = NumberFormat.currency(
-      locale: 'sv_SE', // Use the appropriate locale
-      symbol: 'kr', // Use the appropriate currency symbol
+      locale: 'sv_SE',
+      symbol: 'kr',
     ).format(totalPrice);
 
     return SafeArea(
@@ -67,7 +84,7 @@ class _OrdersViewState extends State<OrderView> {
                 );
 
                 if (result != null) {
-                  _addArticle(result);
+                  addArticle(result);
                 }
               },
             ),
@@ -110,10 +127,7 @@ class _OrdersViewState extends State<OrderView> {
                                 PopupMenuItem(
                                   value: order,
                                   onTap: () {
-                                    setState(() {
-                                      orders.removeAt(index);
-                                      //totalPrice -= order['Price'];
-                                    });
+                                    removeArticle(order);
                                   },
                                   child: const Text('Ta bort'),
                                 ),
@@ -161,13 +175,20 @@ class _OrdersViewState extends State<OrderView> {
                           backgroundColor: const Color(0xffEEB53A),
                           foregroundColor: const Color(0xff39328F),
                         ),
-                        onPressed: () {
-                          showModalBottomSheet(
+                        onPressed: () async {
+                          final orderSent = await showModalBottomSheet(
                             useSafeArea: true,
                             context: context,
-                            builder: (context) =>
-                                BottomSheetView(c: widget.customer),
+                            builder: (context) => BottomSheetView(
+                              customer: widget.customer,
+                              orders: orders,
+                              accessToken: widget.accessToken,
+                            ),
                           );
+
+                          if (orderSent == true) {
+                            clearOrders();
+                          }
                         },
                         child: const Text(
                           'Beställ',
@@ -196,7 +217,7 @@ class _OrdersViewState extends State<OrderView> {
                           );
 
                           if (updatedArticle != null) {
-                            _addArticle(updatedArticle);
+                            addArticle(updatedArticle);
                           }
                         },
                         child: const ListTile(

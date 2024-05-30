@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:easyscan/src/services/auth_service.dart';
-import 'package:easyscan/src/views/scan_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';

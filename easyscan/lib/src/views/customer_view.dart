@@ -166,7 +166,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => OrdersView(
+                builder: (context) => OrderView(
                   accessToken: accessToken,
                   customer: customer,
                 ),
@@ -207,7 +207,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => OrdersView(
+                builder: (context) => OrderView(
                   accessToken: accessToken,
                   customer: customer,
                 ),

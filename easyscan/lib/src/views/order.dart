@@ -1,5 +1,6 @@
 import 'package:easyscan/src/services/auth_service.dart';
 import 'package:easyscan/src/services/order_storage.dart';
+import 'package:easyscan/src/views/loadArticles.dart';
 import 'package:easyscan/src/views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -78,9 +79,10 @@ class _OrdersViewState extends State<OrderView> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        AddProductScreen(customer: widget.customer),
-                  ),
+                      builder: (BuildContext context) =>
+                          ArticlesView(accessToken: widget.accessToken)
+                      //const AddProductScreen(),
+                      ),
                 );
 
                 if (result != null) {

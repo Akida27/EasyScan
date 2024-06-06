@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key, this.customer, this.article});
+  const AddProductScreen({super.key, this.article});
 
   static const routeName = '/add_product_screen';
   final dynamic article;
-  final dynamic customer;
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();

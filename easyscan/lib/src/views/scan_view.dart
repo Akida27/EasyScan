@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:easyscan/src/services/auth_service.dart';
+import 'package:easyscan/src/views/add_product_view.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,10 +29,6 @@ class _ScanViewState extends State<ScanView> {
   bool scanStarted = false;
   bool processingCode = false;
   String? scannedData;
-  String? productName;
-  String? productNumber;
-  String? quantity;
-  String? weight;
   final Map<String, dynamic> _scanCache = {};
 
   @override
@@ -45,14 +42,8 @@ class _ScanViewState extends State<ScanView> {
     super.dispose();
   }
 
-  void _saveForm() {
-    final newArticle = {
-      'Description': productName,
-      'ArticleNumber': productNumber,
-      'Quantity': quantity,
-      'Weight': weight,
-    };
-    Navigator.pop(context, newArticle);
+  void _handleArticleSelection(Map<String, String> selectedArticle) {
+    Navigator.pop(context, selectedArticle);
   }
 
   Future fetchArticle(String barcodeNumber) async {
@@ -87,11 +78,20 @@ class _ScanViewState extends State<ScanView> {
         );
 
         if (article != null) {
-          productName = article['Description'];
-          productNumber = article['ArticleNumber'];
-          quantity = 'quantity';
-          weight = 'Weight';
-          _saveForm();
+          if (mounted) {
+            final updatedArticle = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddProductScreen(article: article),
+              ),
+            );
+            if (kDebugMode) {
+              print('ScanView: $updatedArticle');
+            }
+            if (updatedArticle != null) {
+              _handleArticleSelection(updatedArticle);
+            }
+          }
         }
       } else {
         throw Exception('Failed to load article');

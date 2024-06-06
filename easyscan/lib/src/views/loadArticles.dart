@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'package:easyscan/src/views/order.dart';
+import 'package:easyscan/src/views/add_product_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'order_view.dart';
-import '../settings/settings_view.dart';
 
 class ArticlesView extends StatefulWidget {
   const ArticlesView({super.key, required this.accessToken});
@@ -17,11 +15,6 @@ class ArticlesView extends StatefulWidget {
 
 class _ArticlesViewState extends State<ArticlesView> {
   List<dynamic> articles = [];
-  final formKey = GlobalKey<FormState>();
-  String? productName;
-  String? productNumber;
-  String? quantity;
-  String? weight;
 
   @override
   void initState() {
@@ -29,17 +22,8 @@ class _ArticlesViewState extends State<ArticlesView> {
     fetcharticles(widget.accessToken);
   }
 
-  void _handleArticleSelection() {
-    if (formKey.currentState!.validate()) {
-      formKey.currentState!.save();
-      final newArticle = {
-        'Description': productName,
-        'ArticleNumber': productNumber,
-        'Quantity': quantity,
-        'Weight': weight,
-      };
-      Navigator.pop(context, newArticle);
-    }
+  void _handleArticleSelection(Map<String, String?> selectedArticle) {
+    Navigator.pop(context, selectedArticle);
   }
 
   Future<void> fetcharticles(String accessToken) async {
@@ -100,9 +84,23 @@ class _ArticlesViewState extends State<ArticlesView> {
           final article = articles[index];
 
           return ListTile(
-              title: Text(article['Description']),
-              subtitle: Text(article['ArticleNumber']),
-              onTap: _handleArticleSelection);
+            title: Text(article['Description']),
+            subtitle: Text(article['ArticleNumber']),
+            onTap: () async {
+              final updatedArticle = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddProductScreen(article: article),
+                ),
+              );
+              if (kDebugMode) {
+                print('ArticlesView: $updatedArticle');
+              }
+              if (updatedArticle != null) {
+                _handleArticleSelection(updatedArticle);
+              }
+            },
+          );
         },
       ),
     );
@@ -112,7 +110,7 @@ class _ArticlesViewState extends State<ArticlesView> {
 class SearchBarDelegate extends SearchDelegate<String> {
   final List<dynamic> articles;
   final String accessToken;
-  final VoidCallback _handleArticleSelection;
+  final Function(Map<String, String?>) _handleArticleSelection;
 
   SearchBarDelegate(
       this.articles, this.accessToken, this._handleArticleSelection);
@@ -143,7 +141,9 @@ class SearchBarDelegate extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     List<dynamic> matchesQuery = [];
     for (var article in articles) {
-      if (article['Name'].toLowerCase().startsWith(query.toLowerCase())) {
+      if (article['Description']
+          .toLowerCase()
+          .startsWith(query.toLowerCase())) {
         matchesQuery.add(article);
       }
     }
@@ -153,18 +153,31 @@ class SearchBarDelegate extends SearchDelegate<String> {
         final article = matchesQuery[index];
 
         return ListTile(
-          title: Text(article['Name']),
-          subtitle: Text(article['Phone']),
+          title: Text(article['Description']),
+          subtitle: Text(article['ArticleNumber']),
           leading: CircleAvatar(
             child: Text(
-              article['Name'].toString().substring(0, 1),
+              article['Description'].toString().substring(0, 1),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          onTap: _handleArticleSelection,
+          onTap: () async {
+            final updatedArticle = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddProductScreen(article: article),
+              ),
+            );
+            if (kDebugMode) {
+              print('ArticlesView: $updatedArticle');
+            }
+            if (updatedArticle != null) {
+              _handleArticleSelection(updatedArticle);
+            }
+          },
         );
       },
     );
@@ -174,7 +187,9 @@ class SearchBarDelegate extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     List<dynamic> matchesQuery = [];
     for (var article in articles) {
-      if (article['Name'].toLowerCase().startsWith(query.toLowerCase())) {
+      if (article['Description']
+          .toLowerCase()
+          .startsWith(query.toLowerCase())) {
         matchesQuery.add(article);
       }
     }
@@ -184,18 +199,32 @@ class SearchBarDelegate extends SearchDelegate<String> {
         final article = matchesQuery[index];
 
         return ListTile(
-            title: Text(article['Name']),
-            subtitle: Text(article['Phone']),
-            leading: CircleAvatar(
-              child: Text(
-                article['Name'].toString().substring(0, 1),
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+          title: Text(article['Description']),
+          subtitle: Text(article['ArticleNumber']),
+          leading: CircleAvatar(
+            child: Text(
+              article['Description'].toString().substring(0, 1),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            onTap: _handleArticleSelection);
+          ),
+          onTap: () async {
+            final updatedArticle = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddProductScreen(article: article),
+              ),
+            );
+            if (kDebugMode) {
+              print('ArticlesView: $updatedArticle');
+            }
+            if (updatedArticle != null) {
+              _handleArticleSelection(updatedArticle);
+            }
+          },
+        );
       },
     );
   }

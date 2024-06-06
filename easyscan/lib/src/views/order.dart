@@ -210,7 +210,7 @@ class _OrdersViewState extends State<OrderView> {
                           foregroundColor: const Color(0xffCAC4D0),
                         ),
                         onPressed: () async {
-                          final updatedArticle = await Navigator.push(
+                          final scannedArticle = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
@@ -218,8 +218,8 @@ class _OrdersViewState extends State<OrderView> {
                             ),
                           );
 
-                          if (updatedArticle != null) {
-                            addArticle(updatedArticle);
+                          if (scannedArticle != null) {
+                            addArticle(scannedArticle);
                           }
                         },
                         child: const ListTile(

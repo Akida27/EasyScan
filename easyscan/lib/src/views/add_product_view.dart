@@ -17,8 +17,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final formKey = GlobalKey<FormState>();
   String? productName;
   String? productNumber;
-  String? quantity;
-  String? weight;
 
   @override
   void initState() {
@@ -26,8 +24,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (widget.article != null) {
       productName = widget.article['Description'];
       productNumber = widget.article['ArticleNumber'];
-      quantity = widget.article['Quantity'];
-      weight = widget.article['Weight'];
     }
   }
 
@@ -37,9 +33,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
       final newArticle = {
         'Description': productName,
         'ArticleNumber': productNumber,
-        'Quantity': quantity,
-        'Weight': weight,
       };
+      if (kDebugMode) {
+        print('AddProductScreennnnnnnnnnnnn: $newArticle');
+      }
       Navigator.pop(context, newArticle);
     }
   }
@@ -82,60 +79,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 SizedBox(height: height * 0.01),
                 TextFormField(
                   initialValue: productNumber?.toString(),
-                  decoration: const InputDecoration(
-                    labelText: 'Artikelnummer',
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Artikelnummer är obligatoriskt';
-                    } else if (value.length > 6) {
-                      return 'Artikelnummer får inte vara längre än 6 tecken';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) =>
-                      productNumber = int.tryParse(value!).toString(),
-                  maxLength: 6,
+                  readOnly: true,
                 ),
-                //SizedBox(height: height * 0.01),
-                // TextFormField(
-                //   initialValue: quantity?.toString(),
-                //   decoration: const InputDecoration(
-                //     labelText: 'Antal',
-                //     hintText: 'Ex 10',
-                //   ),
-                //   keyboardType: TextInputType.number,
-                //   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Antal är obligatoriskt';
-                //     }
-                //     return null;
-                //   },
-                //   onSaved: (value) =>
-                //       quantity = int.tryParse(value!).toString(),
-                //   maxLength: 5,
-                // ),
-                // SizedBox(height: height * 0.01),
-                // TextFormField(
-                //   initialValue: weight?.toString(),
-                //   decoration: const InputDecoration(
-                //     labelText: 'Vikt (kg)',
-                //     hintText: 'Ex 20',
-                //   ),
-                //   keyboardType: TextInputType.number,
-                //   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Vikt är obligatoriskt';
-                //     }
-                //     return null;
-                //   },
-                //   onSaved: (value) => weight = int.tryParse(value!).toString(),
-                //   maxLength: 3,
-                // ),
                 SizedBox(height: height * 0.03),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(

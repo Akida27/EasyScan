@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:easyscan/src/services/auth_service.dart';
 import 'package:easyscan/src/views/add_product_view.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:vibration/vibration.dart';
 
@@ -42,7 +43,7 @@ class _ScanViewState extends State<ScanView> {
     super.dispose();
   }
 
-  void _handleArticleSelection(Map<String, String> selectedArticle) {
+  void _handleArticleSelection(Map<String, String?> selectedArticle) {
     Navigator.pop(context, selectedArticle);
   }
 

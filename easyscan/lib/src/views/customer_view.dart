@@ -17,18 +17,40 @@ class CustomersView extends StatefulWidget {
 
 class _CustomersViewState extends State<CustomersView> {
   List<dynamic> customers = [];
+  final ScrollController scrollController = ScrollController();
+  int currentOffset = 0;
+  int limit = 50;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     fetchCustomers(widget.accessToken);
+
+    scrollController.addListener(
+      () {
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
+          fetchCustomers(widget.accessToken);
+        }
+      },
+    );
   }
 
   Future<void> fetchCustomers(String accessToken) async {
+    if (isLoading) {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
     if (kDebugMode) {
       print('CustomersView accessToken: $accessToken');
     }
-    const String apiUrl = 'https://api.fortnox.se/3/customers';
+    String apiUrl =
+        'https://api.fortnox.se/3/customers/?offset=$currentOffset&limit=$limit';
 
     try {
       final response = await http.get(
@@ -39,8 +61,15 @@ class _CustomersViewState extends State<CustomersView> {
       );
 
       if (response.statusCode == 200) {
+        final newCustomers = json.decode(response.body)['Customers'];
         setState(() {
-          customers = json.decode(response.body)['Customers'];
+          customers.addAll(newCustomers);
+          currentOffset += limit;
+          isLoading = false;
+
+          if (kDebugMode) {
+            print("customers: ${customers.length}");
+          }
         });
       } else {
         throw Exception('Failed to load customers');
@@ -69,40 +98,48 @@ class _CustomersViewState extends State<CustomersView> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: SearchBarDelegate(customers, widget.accessToken),
+                delegate: SearchBarDelegate(
+                    customers, widget.accessToken, scrollController),
               );
             },
           ),
         ],
       ),
       body: ListView.builder(
-        itemCount: customers.length,
+        controller: scrollController,
+        itemCount: customers.length + 1,
         itemBuilder: (BuildContext context, int index) {
+          if (index == customers.length) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           final customer = customers[index];
 
           return ListTile(
-              title: Text(customer['Name']),
-              subtitle: Text(customer['Phone']),
-              leading: CircleAvatar(
-                child: Text(
-                  customer['Name'].toString().substring(0, 1),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+            title: Text(customer['Name']),
+            subtitle: Text(customer['Phone']),
+            leading: CircleAvatar(
+              child: Text(
+                customer['Name'].toString().substring(0, 1),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => OrderView(
-                      accessToken: widget.accessToken,
-                      customer: customer,
-                    ),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OrderView(
+                    accessToken: widget.accessToken,
+                    customer: customer,
                   ),
-                );
-              });
+                ),
+              );
+            },
+          );
         },
       ),
     );
@@ -113,7 +150,9 @@ class SearchBarDelegate extends SearchDelegate<String> {
   final List<dynamic> customers;
   final String accessToken;
 
-  SearchBarDelegate(this.customers, this.accessToken);
+  final scrollController;
+
+  SearchBarDelegate(this.customers, this.accessToken, this.scrollController);
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -146,8 +185,14 @@ class SearchBarDelegate extends SearchDelegate<String> {
       }
     }
     return ListView.builder(
-      itemCount: matchesQuery.length,
+      controller: scrollController,
+      itemCount: customers.length + 1,
       itemBuilder: (BuildContext context, int index) {
+        if (index == customers.length) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         final customer = matchesQuery[index];
 
         return ListTile(
@@ -187,8 +232,14 @@ class SearchBarDelegate extends SearchDelegate<String> {
       }
     }
     return ListView.builder(
-      itemCount: matchesQuery.length,
+      controller: scrollController,
+      itemCount: customers.length + 1,
       itemBuilder: (BuildContext context, int index) {
+        if (index == customers.length) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         final customer = matchesQuery[index];
 
         return ListTile(

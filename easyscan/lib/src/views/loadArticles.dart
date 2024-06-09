@@ -15,11 +15,24 @@ class ArticlesView extends StatefulWidget {
 
 class _ArticlesViewState extends State<ArticlesView> {
   List<dynamic> articles = [];
+  final ScrollController scrollController = ScrollController();
+  int currentOffset = 0;
+  int limit = 50;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     fetcharticles(widget.accessToken);
+
+    scrollController.addListener(
+      () {
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
+          fetcharticles(widget.accessToken);
+        }
+      },
+    );
   }
 
   void _handleArticleSelection(Map<String, String?> selectedArticle) {
@@ -27,10 +40,19 @@ class _ArticlesViewState extends State<ArticlesView> {
   }
 
   Future<void> fetcharticles(String accessToken) async {
+    if (isLoading) {
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
     if (kDebugMode) {
       print('ArticlesView accessToken: $accessToken');
     }
-    const String apiUrl = 'https://api.fortnox.se/3/articles';
+    String apiUrl =
+        'https://api.fortnox.se/3/articles/?offset=$currentOffset&limit=$limit';
 
     try {
       final response = await http.get(
@@ -41,8 +63,11 @@ class _ArticlesViewState extends State<ArticlesView> {
       );
 
       if (response.statusCode == 200) {
+        final newArticles = json.decode(response.body)['Articles'];
         setState(() {
-          articles = json.decode(response.body)['Articles'];
+          articles.addAll(newArticles);
+          currentOffset += limit;
+          isLoading = false;
         });
       } else {
         throw Exception('Failed to load articles');
@@ -71,16 +96,22 @@ class _ArticlesViewState extends State<ArticlesView> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: SearchBarDelegate(
-                    articles, widget.accessToken, _handleArticleSelection),
+                delegate: SearchBarDelegate(articles, widget.accessToken,
+                    _handleArticleSelection, scrollController),
               );
             },
           ),
         ],
       ),
       body: ListView.builder(
-        itemCount: articles.length,
+        controller: scrollController,
+        itemCount: articles.length + 1,
         itemBuilder: (BuildContext context, int index) {
+          if (index == articles.length) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           final article = articles[index];
 
           return ListTile(
@@ -112,8 +143,10 @@ class SearchBarDelegate extends SearchDelegate<String> {
   final String accessToken;
   final Function(Map<String, String?>) _handleArticleSelection;
 
-  SearchBarDelegate(
-      this.articles, this.accessToken, this._handleArticleSelection);
+  final scrollController;
+
+  SearchBarDelegate(this.articles, this.accessToken,
+      this._handleArticleSelection, this.scrollController);
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -148,8 +181,14 @@ class SearchBarDelegate extends SearchDelegate<String> {
       }
     }
     return ListView.builder(
-      itemCount: matchesQuery.length,
+      controller: scrollController,
+      itemCount: articles.length + 1,
       itemBuilder: (BuildContext context, int index) {
+        if (index == articles.length) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         final article = matchesQuery[index];
 
         return ListTile(
@@ -194,8 +233,14 @@ class SearchBarDelegate extends SearchDelegate<String> {
       }
     }
     return ListView.builder(
-      itemCount: matchesQuery.length,
+      controller: scrollController,
+      itemCount: articles.length + 1,
       itemBuilder: (BuildContext context, int index) {
+        if (index == articles.length) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         final article = matchesQuery[index];
 
         return ListTile(

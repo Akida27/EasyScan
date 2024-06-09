@@ -59,7 +59,7 @@ class _ScanViewState extends State<ScanView> {
       }
     }
 
-    const String apiUrl = 'https://api.fortnox.se/3/articles';
+    const String apiUrl = 'https://api.fortnox.se/3/articles/?limit=500';
 
     try {
       final response = await http.get(

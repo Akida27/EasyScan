@@ -1,7 +1,5 @@
-import 'package:easyscan/src/data/product_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key, this.article});
@@ -60,6 +58,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextFormField(
+                  maxLines: 1,
                   initialValue: productName,
                   decoration: const InputDecoration(
                     labelText: 'Produkt Namn',
@@ -68,13 +67,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Produktnamn är obligatoriskt';
-                    } else if (value.length > 23) {
-                      return 'Produktnamn får inte vara längre än 23 tecken';
+                    } else if (value.length > 67) {
+                      return 'Produktnamn får inte vara längre än 67 tecken';
                     }
                     return null;
                   },
                   onSaved: (value) => productName = value,
-                  maxLength: 23,
+                  maxLength: 67,
                 ),
                 SizedBox(height: height * 0.01),
                 TextFormField(
@@ -92,19 +91,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     foregroundColor: const Color(0xffCAC4D0), // foreground
                   ),
                   onPressed: _saveForm,
-                  child: widget.article != null
-                      ? const Text(
-                          'Ändra',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        )
-                      : const Text(
-                          'Lägg till',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
+                  child: const Text(
+                    'Lägg till',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
               ],
             ),

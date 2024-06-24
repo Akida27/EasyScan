@@ -3,7 +3,6 @@ import 'package:easyscan/src/views/order.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'order_view.dart';
 import '../settings/settings_view.dart';
 
 class CustomersView extends StatefulWidget {
@@ -21,6 +20,7 @@ class _CustomersViewState extends State<CustomersView> {
   int currentOffset = 0;
   int limit = 50;
   bool isLoading = false;
+  bool hasMoreData = true;
 
   @override
   void initState() {
@@ -31,7 +31,9 @@ class _CustomersViewState extends State<CustomersView> {
       () {
         if (scrollController.position.pixels ==
             scrollController.position.maxScrollExtent) {
-          fetchCustomers(widget.accessToken);
+          if (hasMoreData) {
+            fetchCustomers(widget.accessToken);
+          }
         }
       },
     );
@@ -66,6 +68,10 @@ class _CustomersViewState extends State<CustomersView> {
           customers.addAll(newCustomers);
           currentOffset += limit;
           isLoading = false;
+          if (newCustomers.length < limit) {
+            // If fewer customers are fetched than the limit, no more data
+            hasMoreData = false;
+          }
 
           if (kDebugMode) {
             print("customers: ${customers.length}");
@@ -75,7 +81,7 @@ class _CustomersViewState extends State<CustomersView> {
         throw Exception('Failed to load customers');
       }
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
   }
 
@@ -107,7 +113,7 @@ class _CustomersViewState extends State<CustomersView> {
       ),
       body: ListView.builder(
         controller: scrollController,
-        itemCount: customers.length + 1,
+        itemCount: customers.length + (hasMoreData ? 1 : 0),
         itemBuilder: (BuildContext context, int index) {
           if (index == customers.length) {
             return const Center(
@@ -150,7 +156,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
   final List<dynamic> customers;
   final String accessToken;
 
-  final scrollController;
+  final ScrollController scrollController;
 
   SearchBarDelegate(this.customers, this.accessToken, this.scrollController);
 
@@ -186,7 +192,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
     }
     return ListView.builder(
       controller: scrollController,
-      itemCount: customers.length + 1,
+      itemCount: matchesQuery.length,
       itemBuilder: (BuildContext context, int index) {
         if (index == customers.length) {
           return const Center(
@@ -233,7 +239,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
     }
     return ListView.builder(
       controller: scrollController,
-      itemCount: customers.length + 1,
+      itemCount: matchesQuery.length,
       itemBuilder: (BuildContext context, int index) {
         if (index == customers.length) {
           return const Center(

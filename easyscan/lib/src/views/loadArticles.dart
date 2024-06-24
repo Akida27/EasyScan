@@ -19,6 +19,7 @@ class _ArticlesViewState extends State<ArticlesView> {
   int currentOffset = 0;
   int limit = 50;
   bool isLoading = false;
+  bool hasMoreData = true;
 
   @override
   void initState() {
@@ -29,7 +30,9 @@ class _ArticlesViewState extends State<ArticlesView> {
       () {
         if (scrollController.position.pixels ==
             scrollController.position.maxScrollExtent) {
-          fetcharticles(widget.accessToken);
+          if (hasMoreData) {
+            fetcharticles(widget.accessToken);
+          }
         }
       },
     );
@@ -68,6 +71,10 @@ class _ArticlesViewState extends State<ArticlesView> {
           articles.addAll(newArticles);
           currentOffset += limit;
           isLoading = false;
+          if (newArticles.length < limit) {
+            // If fewer articles are fetched than the limit, no more data
+            hasMoreData = false;
+          }
         });
       } else {
         throw Exception('Failed to load articles');
@@ -105,7 +112,7 @@ class _ArticlesViewState extends State<ArticlesView> {
       ),
       body: ListView.builder(
         controller: scrollController,
-        itemCount: articles.length + 1,
+        itemCount: articles.length + (hasMoreData ? 1 : 0),
         itemBuilder: (BuildContext context, int index) {
           if (index == articles.length) {
             return const Center(
@@ -143,7 +150,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
   final String accessToken;
   final Function(Map<String, String?>) _handleArticleSelection;
 
-  final scrollController;
+  final ScrollController scrollController;
 
   SearchBarDelegate(this.articles, this.accessToken,
       this._handleArticleSelection, this.scrollController);
@@ -182,7 +189,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
     }
     return ListView.builder(
       controller: scrollController,
-      itemCount: articles.length + 1,
+      itemCount: matchesQuery.length,
       itemBuilder: (BuildContext context, int index) {
         if (index == articles.length) {
           return const Center(
@@ -194,15 +201,6 @@ class SearchBarDelegate extends SearchDelegate<String> {
         return ListTile(
           title: Text(article['Description']),
           subtitle: Text(article['ArticleNumber']),
-          leading: CircleAvatar(
-            child: Text(
-              article['Description'].toString().substring(0, 1),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           onTap: () async {
             final updatedArticle = await Navigator.push(
               context,
@@ -234,7 +232,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
     }
     return ListView.builder(
       controller: scrollController,
-      itemCount: articles.length + 1,
+      itemCount: matchesQuery.length,
       itemBuilder: (BuildContext context, int index) {
         if (index == articles.length) {
           return const Center(
@@ -246,15 +244,6 @@ class SearchBarDelegate extends SearchDelegate<String> {
         return ListTile(
           title: Text(article['Description']),
           subtitle: Text(article['ArticleNumber']),
-          leading: CircleAvatar(
-            child: Text(
-              article['Description'].toString().substring(0, 1),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           onTap: () async {
             final updatedArticle = await Navigator.push(
               context,

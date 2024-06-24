@@ -15,6 +15,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final formKey = GlobalKey<FormState>();
   String? productName;
   String? productNumber;
+  String? orderedQuantity;
+  String? deliveredQuantity;
 
   @override
   void initState() {
@@ -22,6 +24,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
     if (widget.article != null) {
       productName = widget.article['Description'];
       productNumber = widget.article['ArticleNumber'];
+      orderedQuantity = widget.article['OrderedQuantity'];
+      deliveredQuantity = widget.article['DeliveredQuantity'];
     }
   }
 
@@ -31,9 +35,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       final newArticle = {
         'Description': productName,
         'ArticleNumber': productNumber,
+        'OrderedQuantity': orderedQuantity,
+        'DeliveredQuantity': deliveredQuantity,
       };
       if (kDebugMode) {
-        print('AddProductScreennnnnnnnnnnnn: $newArticle');
+        print('AddProductScreen: $newArticle');
       }
       Navigator.pop(context, newArticle);
     }
@@ -79,6 +85,44 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 TextFormField(
                   initialValue: productNumber?.toString(),
                   readOnly: true,
+                ),
+                SizedBox(height: height * 0.03),
+                TextFormField(
+                  maxLines: 1,
+                  initialValue: orderedQuantity,
+                  decoration: const InputDecoration(
+                    labelText: 'BEST. ANTAL	',
+                    hintText: '10',
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Antal är obligatoriskt';
+                    } else if (int.tryParse(value) == null) {
+                      return 'Antal måste vara ett heltal';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => orderedQuantity = value,
+                ),
+                SizedBox(height: height * 0.03),
+                TextFormField(
+                  maxLines: 1,
+                  initialValue: deliveredQuantity,
+                  decoration: const InputDecoration(
+                    labelText: 'LEV. ANTAL',
+                    hintText: '10',
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Antal är obligatoriskt';
+                    } else if (int.tryParse(value) == null) {
+                      return 'Antal måste vara ett heltal';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => deliveredQuantity = value,
                 ),
                 SizedBox(height: height * 0.03),
                 ElevatedButton(

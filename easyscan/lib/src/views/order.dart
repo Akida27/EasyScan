@@ -229,6 +229,7 @@ class _OrdersViewState extends State<OrderView> {
                             'Skanna',
                             style: TextStyle(
                               fontSize: 20,
+                              color: Color.fromARGB(255, 216, 212, 212),
                             ),
                           ),
                           leading: Icon(

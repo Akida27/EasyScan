@@ -13,10 +13,12 @@ class AddProductScreen extends StatefulWidget {
 
 class _AddProductScreenState extends State<AddProductScreen> {
   final formKey = GlobalKey<FormState>();
+
   String? productName;
   String? productNumber;
   String? orderedQuantity;
   String? deliveredQuantity;
+  String? price;
 
   @override
   void initState() {
@@ -26,6 +28,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       productNumber = widget.article['ArticleNumber'];
       orderedQuantity = widget.article['OrderedQuantity'];
       deliveredQuantity = widget.article['DeliveredQuantity'];
+      price = widget.article['SalesPrice'];
     }
   }
 
@@ -37,6 +40,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         'ArticleNumber': productNumber,
         'OrderedQuantity': orderedQuantity,
         'DeliveredQuantity': deliveredQuantity,
+        'SalesPrice': price,
       };
       if (kDebugMode) {
         print('AddProductScreen: $newArticle');
@@ -51,9 +55,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: widget.article != null
-            ? const Text('Ändra artikel')
-            : const Text('Lägg till artikel'),
+        title:
+            widget.article != null ? const Text('Ändra artikel') : const Text('Lägg till artikel'),
       ),
       body: SingleChildScrollView(
         child: Padding(

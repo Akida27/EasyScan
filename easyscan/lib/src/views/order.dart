@@ -4,6 +4,7 @@ import 'package:easyscan/src/views/loadArticles.dart';
 import 'package:easyscan/src/views/scan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'add_product_view.dart';
 import 'bottom_sheet_view.dart';
 
@@ -26,7 +27,7 @@ class OrderView extends StatefulWidget {
 class _OrdersViewState extends State<OrderView> {
   final AuthService authService = AuthService();
   List<Map<String, dynamic>> orders = [];
-  int totalPrice = 0;
+  late double totalPrice;
 
   @override
   void initState() {
@@ -36,6 +37,7 @@ class _OrdersViewState extends State<OrderView> {
 
   Future<void> loadOrders() async {
     orders = await loadOrdersFromPreferences(widget.customer['CustomerNumber']);
+    calculateTotalPrice();
     setState(() {});
   }
 
@@ -43,6 +45,7 @@ class _OrdersViewState extends State<OrderView> {
     setState(() {
       orders.add(order);
       saveOrdersToPreferences(widget.customer['CustomerNumber'], orders);
+      calculateTotalPrice();
     });
   }
 
@@ -50,6 +53,7 @@ class _OrdersViewState extends State<OrderView> {
     setState(() {
       orders.remove(order);
       saveOrdersToPreferences(widget.customer['CustomerNumber'], orders);
+      calculateTotalPrice();
     });
   }
 
@@ -57,7 +61,17 @@ class _OrdersViewState extends State<OrderView> {
     setState(() {
       orders.clear();
       clearOrdersFromPreferences(widget.customer['CustomerNumber']);
+      totalPrice = 0.0;
     });
+  }
+
+  // calc each order price
+  void calculateTotalPrice() {
+    totalPrice = 0;
+    for (var order in orders) {
+      final price = double.parse(order['SalesPrice']) * double.parse(order['OrderedQuantity']);
+      totalPrice += price;
+    }
   }
 
   @override
@@ -113,14 +127,14 @@ class _OrdersViewState extends State<OrderView> {
                                     final updatedArticle = await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddProductScreen(article: order),
+                                        builder: (context) => AddProductScreen(article: order),
                                       ),
                                     );
 
                                     if (updatedArticle != null) {
                                       setState(() {
                                         orders[index] = updatedArticle;
+                                        calculateTotalPrice();
                                       });
                                     }
                                   },
@@ -135,7 +149,8 @@ class _OrdersViewState extends State<OrderView> {
                                 ),
                               ],
                             ),
-                            title: Text("${order['Description']} "),
+                            title:
+                                Text("${order['Description']} - ${order['OrderedQuantity']} st."),
                             subtitle: Text(
                               "Artikelnummer: ${order['ArticleNumber']}",
                               style: const TextStyle(color: Color(0xff8E8A91)),
@@ -146,8 +161,7 @@ class _OrdersViewState extends State<OrderView> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 27.0, right: 27, bottom: 10, top: 10),
+              padding: const EdgeInsets.only(left: 27.0, right: 27, bottom: 10, top: 10),
               child: orders.isNotEmpty
                   ? Row(
                       children: [
@@ -160,8 +174,7 @@ class _OrdersViewState extends State<OrderView> {
                   : const SizedBox(),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  bottom: 30, top: 16, left: 22, right: 22),
+              padding: const EdgeInsets.only(bottom: 30, top: 16, left: 22, right: 22),
               child: Column(
                 children: [
                   Row(
@@ -213,8 +226,7 @@ class _OrdersViewState extends State<OrderView> {
                           final scannedArticle = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  ScanView(accessToken: widget.accessToken),
+                              builder: (context) => ScanView(accessToken: widget.accessToken),
                             ),
                           );
 

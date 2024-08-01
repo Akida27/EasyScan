@@ -16,6 +16,7 @@ class BottomSheetView extends StatelessWidget {
   final List<Map<String, dynamic>> orders;
   final String accessToken;
 
+  // create order
   Future<void> postOrders(BuildContext context) async {
     const String apiUrl = 'https://api.fortnox.se/3/orders';
 
@@ -30,6 +31,9 @@ class BottomSheetView extends StatelessWidget {
               {
                 "ArticleNumber": order['ArticleNumber'],
                 "Description": order['Description'],
+                // added these
+                "OrderedQuantity": order['OrderedQuantity'],
+                "DeliveredQuantity": order['DeliveredQuantity'],
               }
           ],
         }
@@ -96,7 +100,7 @@ class BottomSheetView extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   final order = orders[index];
                   return ListTile(
-                    title: Text("${order['Description']} "),
+                    title: Text("${order['Description']} - ${order['OrderedQuantity']} st."),
                     subtitle: Text(
                       "Artikelnummer: ${order['ArticleNumber']}",
                       style: const TextStyle(color: Color(0xff8E8A91)),

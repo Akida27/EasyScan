@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:easyscan/src/views/add_product_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,7 @@ class _ArticlesViewState extends State<ArticlesView> {
 
     scrollController.addListener(
       () {
-        if (scrollController.position.pixels ==
-            scrollController.position.maxScrollExtent) {
+        if (scrollController.position.pixels == scrollController.position.maxScrollExtent) {
           if (hasMoreData) {
             fetcharticles(widget.accessToken);
           }
@@ -54,8 +54,7 @@ class _ArticlesViewState extends State<ArticlesView> {
     if (kDebugMode) {
       print('ArticlesView accessToken: $accessToken');
     }
-    String apiUrl =
-        'https://api.fortnox.se/3/articles/?offset=$currentOffset&limit=$limit';
+    String apiUrl = 'https://api.fortnox.se/3/articles/?offset=$currentOffset&limit=$limit';
 
     try {
       final response = await http.get(
@@ -67,6 +66,7 @@ class _ArticlesViewState extends State<ArticlesView> {
 
       if (response.statusCode == 200) {
         final newArticles = json.decode(response.body)['Articles'];
+        print(newArticles);
         setState(() {
           articles.addAll(newArticles);
           currentOffset += limit;
@@ -80,7 +80,9 @@ class _ArticlesViewState extends State<ArticlesView> {
         throw Exception('Failed to load articles');
       }
     } catch (e) {
-      print('Error: $e');
+      if (kDebugMode) {
+        print('Error: $e');
+      }
     }
   }
 
@@ -103,8 +105,8 @@ class _ArticlesViewState extends State<ArticlesView> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: SearchBarDelegate(articles, widget.accessToken,
-                    _handleArticleSelection, scrollController),
+                delegate: SearchBarDelegate(
+                    articles, widget.accessToken, _handleArticleSelection, scrollController),
               );
             },
           ),
@@ -120,6 +122,7 @@ class _ArticlesViewState extends State<ArticlesView> {
             );
           }
           final article = articles[index];
+          print(article);
 
           return ListTile(
             title: Text(article['Description']),
@@ -152,8 +155,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
 
   final ScrollController scrollController;
 
-  SearchBarDelegate(this.articles, this.accessToken,
-      this._handleArticleSelection, this.scrollController);
+  SearchBarDelegate(
+      this.articles, this.accessToken, this._handleArticleSelection, this.scrollController);
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -181,9 +184,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     List<dynamic> matchesQuery = [];
     for (var article in articles) {
-      if (article['Description']
-          .toLowerCase()
-          .startsWith(query.toLowerCase())) {
+      if (article['Description'].toLowerCase().startsWith(query.toLowerCase())) {
         matchesQuery.add(article);
       }
     }
@@ -224,9 +225,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     List<dynamic> matchesQuery = [];
     for (var article in articles) {
-      if (article['Description']
-          .toLowerCase()
-          .startsWith(query.toLowerCase())) {
+      if (article['Description'].toLowerCase().startsWith(query.toLowerCase())) {
         matchesQuery.add(article);
       }
     }

@@ -41,10 +41,14 @@ class LoginView extends StatelessWidget {
                   backgroundColor: const Color(0xffEEB53A), // background
                   foregroundColor: const Color(0xff39328F), // foreground
                 ),
-                onPressed: () async {
-                  await authService.isAccessTokenValid()
-                      ? checkStoredTokens(context)
-                      : _launchUrl();
+                onPressed: () {
+                  authService.isAccessTokenValid().then((isValid) {
+                    if (isValid) {
+                      checkStoredTokens(context);
+                    } else {
+                      _launchUrl();
+                    }
+                  });
                 },
                 child: const Text(
                   'Logga in med Fortnox',

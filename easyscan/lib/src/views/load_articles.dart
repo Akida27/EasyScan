@@ -66,7 +66,11 @@ class _ArticlesViewState extends State<ArticlesView> {
 
       if (response.statusCode == 200) {
         final newArticles = json.decode(response.body)['Articles'];
-        print(newArticles);
+
+        if (kDebugMode) {
+          print(newArticles);
+        }
+
         setState(() {
           articles.addAll(newArticles);
           currentOffset += limit;
@@ -118,11 +122,15 @@ class _ArticlesViewState extends State<ArticlesView> {
         itemBuilder: (BuildContext context, int index) {
           if (index == articles.length) {
             return const Center(
+              heightFactor: 15,
               child: CircularProgressIndicator(),
             );
           }
           final article = articles[index];
-          print(article);
+
+          if (kDebugMode) {
+            print(article);
+          }
 
           return ListTile(
             title: Text(article['Description']),

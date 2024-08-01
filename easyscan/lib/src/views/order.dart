@@ -110,7 +110,7 @@ class _OrdersViewState extends State<OrderView> {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                padding: const EdgeInsets.only(left: 18.0),
                 child: orders.isEmpty
                     ? const Center(child: Text('Inga order änn'))
                     : ListView.builder(
@@ -118,6 +118,7 @@ class _OrdersViewState extends State<OrderView> {
                         itemBuilder: (BuildContext context, int index) {
                           final order = orders[index];
                           return ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                             trailing: PopupMenuButton(
                               icon: const Icon(Icons.more_vert),
                               itemBuilder: (BuildContext context) => [

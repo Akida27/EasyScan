@@ -19,6 +19,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   String? orderedQuantity;
   String? deliveredQuantity;
   String? price;
+  late bool isNewArticle = true;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       deliveredQuantity = widget.article['DeliveredQuantity'];
       price = widget.article['SalesPrice'];
     }
+    isNewArticle = widget.article['OrderedQuantity'] == null;
   }
 
   void _saveForm() {
@@ -55,8 +57,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title:
-            widget.article != null ? const Text('Ändra artikel') : const Text('Lägg till artikel'),
+        title: isNewArticle ? const Text('Lägg till artikel') : const Text('Ändra artikel'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -86,15 +87,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ),
                 SizedBox(height: height * 0.01),
                 TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Produkt Nummer',
+                  ),
                   initialValue: productNumber?.toString(),
                   readOnly: true,
+                  enabled: false,
                 ),
                 SizedBox(height: height * 0.03),
                 TextFormField(
                   maxLines: 1,
                   initialValue: orderedQuantity,
                   decoration: const InputDecoration(
-                    labelText: 'BEST. ANTAL	',
+                    labelText: 'Best. Antal	',
                     hintText: '10',
                   ),
                   keyboardType: TextInputType.number,
@@ -113,7 +118,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   maxLines: 1,
                   initialValue: deliveredQuantity,
                   decoration: const InputDecoration(
-                    labelText: 'LEV. ANTAL',
+                    labelText: 'Lev. Antal',
                     hintText: '10',
                   ),
                   keyboardType: TextInputType.number,
@@ -138,9 +143,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     foregroundColor: const Color(0xffCAC4D0), // foreground
                   ),
                   onPressed: _saveForm,
-                  child: const Text(
-                    'Lägg till',
-                    style: TextStyle(
+                  child: Text(
+                    isNewArticle ? 'Lägg till' : 'Ändra',
+                    style: const TextStyle(
                       fontSize: 20,
                     ),
                   ),

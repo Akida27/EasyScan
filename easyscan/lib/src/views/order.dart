@@ -78,7 +78,8 @@ class _OrdersViewState extends State<OrderView> {
     totalPrice = 0;
     for (var order in orders) {
       if (order['SalesPrice'] != null) {
-        final price = double.parse(order['SalesPrice']) * double.parse(order['OrderedQuantity']);
+        final price = double.parse(order['SalesPrice']) *
+            double.parse(order['OrderedQuantity']);
 
         totalPrice += price;
       }
@@ -129,7 +130,8 @@ class _OrdersViewState extends State<OrderView> {
                         itemBuilder: (BuildContext context, int index) {
                           final order = orders[index];
                           return ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 0),
                             trailing: PopupMenuButton(
                               icon: const Icon(Icons.more_vert),
                               itemBuilder: (BuildContext context) => [
@@ -139,7 +141,8 @@ class _OrdersViewState extends State<OrderView> {
                                     final updatedArticle = await Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => AddProductScreen(article: order),
+                                        builder: (context) =>
+                                            AddProductScreen(article: order),
                                       ),
                                     );
 
@@ -158,8 +161,8 @@ class _OrdersViewState extends State<OrderView> {
                                 ),
                               ],
                             ),
-                            title:
-                                Text("${order['Description']} - ${order['OrderedQuantity']} st."),
+                            title: Text(
+                                "${order['Description']} - ${order['OrderedQuantity']} st."),
                             subtitle: Text(
                               "Artikelnummer: ${order['ArticleNumber']}",
                               style: const TextStyle(color: Color(0xff8E8A91)),
@@ -170,7 +173,8 @@ class _OrdersViewState extends State<OrderView> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 27.0, right: 27, bottom: 10, top: 10),
+              padding: const EdgeInsets.only(
+                  left: 27.0, right: 27, bottom: 10, top: 10),
               child: orders.isNotEmpty
                   ? Row(
                       children: [
@@ -183,7 +187,8 @@ class _OrdersViewState extends State<OrderView> {
                   : const SizedBox(),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 30, top: 16, left: 22, right: 22),
+              padding: const EdgeInsets.only(
+                  bottom: 30, top: 16, left: 22, right: 22),
               child: Column(
                 children: [
                   Row(
@@ -199,21 +204,23 @@ class _OrdersViewState extends State<OrderView> {
                           backgroundColor: const Color(0xffEEB53A),
                           foregroundColor: const Color(0xff39328F),
                         ),
-                        onPressed: () async {
-                          final orderSent = await showModalBottomSheet(
-                            useSafeArea: true,
-                            context: context,
-                            builder: (context) => BottomSheetView(
-                              customer: widget.customer,
-                              orders: orders,
-                              accessToken: widget.accessToken,
-                            ),
-                          );
+                        onPressed: orders.isEmpty
+                            ? null
+                            : () async {
+                                final orderSent = await showModalBottomSheet(
+                                  useSafeArea: true,
+                                  context: context,
+                                  builder: (context) => BottomSheetView(
+                                    customer: widget.customer,
+                                    orders: orders,
+                                    accessToken: widget.accessToken,
+                                  ),
+                                );
 
-                          if (orderSent == true) {
-                            clearOrders();
-                          }
-                        },
+                                if (orderSent == true) {
+                                  clearOrders();
+                                }
+                              },
                         child: const Text(
                           'Beställ',
                           style: TextStyle(
@@ -235,7 +242,8 @@ class _OrdersViewState extends State<OrderView> {
                           final scannedArticle = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ScanView(accessToken: widget.accessToken),
+                              builder: (context) =>
+                                  ScanView(accessToken: widget.accessToken),
                             ),
                           );
 

@@ -28,8 +28,7 @@ class AuthService {
       await storeTokens(
         accessToken: data['access_token'],
         refreshToken: data['refresh_token'],
-        expiresIn:
-            data['expires_in'], // assuming the response includes expires_in
+        expiresIn: data['expires_in'],
       );
     } else {
       throw Exception('Failed to fetch tokens');

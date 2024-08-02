@@ -56,6 +56,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+// after a successful login navigate to CustomersView
   void navigateToCustomersView(String accessToken) {
     if (navigatorKey.currentState != null) {
       if (kDebugMode) {
